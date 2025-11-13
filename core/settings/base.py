@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
 APPS = [
     # local apps
+    'cars.apps.CarsConfig',
 ]
 
 THIRD_PARTY_APPS = [
