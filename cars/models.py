@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
-from django.contrib.auth.models import User
-from accounts.models import DealerProfile
+from accounts.models import DealerProfile, CustomUser
 
 
 class CarFeature(models.Model):
@@ -127,7 +126,7 @@ class CarReview(models.Model):
         related_name='reviews'
     )
     user = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         related_name='car_reviews'
     )
@@ -148,7 +147,7 @@ class FavoriteCar(models.Model):
     A user cannot favorite the same car multiple times.
     """
     user = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         related_name='favorite_cars'
     )

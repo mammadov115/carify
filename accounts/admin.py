@@ -13,6 +13,11 @@ class BuyerProfileInline(admin.StackedInline):
     verbose_name_plural = 'Buyer Profile'
     fk_name = 'user'
 
+    def save_model(self, request, obj, form, change):
+        obj.clean()
+        super().save_model(request, obj, form, change)
+
+
 
 class DealerProfileInline(admin.StackedInline):
     """
@@ -23,6 +28,7 @@ class DealerProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Dealer Profile'
     fk_name = 'user'
+
 
 
 @admin.register(CustomUser)
@@ -75,7 +81,12 @@ class BuyerProfileAdmin(admin.ModelAdmin):
     Admin panel for BuyerProfile.
     Typically shown inline in CustomUserAdmin.
     """
-    list_display = ('user', 'first_name', 'last_name', 'phone_number', 'address')
+    list_display = ('user','phone_number', 'address')
+
+    def save_model(self, request, obj, form, change):
+        obj.clean()
+        super().save_model(request, obj, form, change)
+
 
 
 @admin.register(DealerProfile)
@@ -85,3 +96,7 @@ class DealerProfileAdmin(admin.ModelAdmin):
     Typically shown inline in CustomUserAdmin.
     """
     list_display = ('user', 'company_name', 'tax_number', 'phone_number', 'email', 'address')
+
+    def save_model(self, request, obj, form, change):
+        obj.clean()
+        super().save_model(request, obj, form, change)

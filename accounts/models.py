@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from cars.models import Car
+from django.core.exceptions import ValidationError
 
 
 class CustomUserManager(BaseUserManager):
@@ -72,13 +72,19 @@ class BuyerProfile(models.Model):
         on_delete=models.CASCADE,
         related_name='buyer_profile'
     )
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
     phone_number = models.CharField(max_length=30)
     address = models.CharField(max_length=255, blank=True, null=True)
 
     # Wishlist and orders can be related later via ForeignKey or ManyToMany
-    wishlist = models.ManyToManyField(Car, blank=True, related_name='wishlisted_by')
+    wishlist = models.ManyToManyField("cars.Car", blank=True, related_name='wishlisted_by')
+
+    def clean(self):
+        if self.user.role != 'buyer':
+            raise ValidationError("User role must be 'buyer' to create a BuyerProfile.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -100,8 +106,16 @@ class DealerProfile(models.Model):
     email = models.EmailField(blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
 
-    # Dealer can have multiple car listings
-    cars = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='dealer')
+    def clean(self):
+        """
+        Ensure that only users with role 'dealer' can have a DealerProfile.
+        """
+        if self.user.role != 'dealer':
+            raise ValidationError("User role must be 'dealer' to create a DealerProfile.")
+
+    def save(self, *args, **kwargs):
+        self.clean()  # validate before saving
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.company_name

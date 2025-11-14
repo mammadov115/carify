@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
 APPS = [
     # local apps
+    'accounts.apps.AccountsConfig',
     'cars.apps.CarsConfig',
 ]
 
@@ -85,6 +86,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+
+AUTH_USER_MODEL = "accounts.CustomUser"
 
 
 # Database
