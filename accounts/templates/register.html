@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-center">Register</h1>
+
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            
+            <!-- Username -->
+            <div>
+                <label class="block text-gray-700">Username</label>
+                <input type="text" name="username" value="{{ form.username.value }}" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                {% if form.username.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.username.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="block text-gray-700">Email</label>
+                <input type="email" name="email" value="{{ form.email.value }}" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                {% if form.email.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label class="block text-gray-700">Password</label>
+                <input type="password" name="password1" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                {% if form.password1.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.password1.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-gray-700">Confirm Password</label>
+                <input type="password" name="password2" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                {% if form.password2.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.password2.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Role -->
+            <div>
+                <label class="block text-gray-700">Role</label>
+                <select name="role" class="w-full p-2 border border-gray-300 rounded mt-1">
+                    <option value="buyer">Buyer</option>
+                    <option value="dealer">Dealer</option>
+                </select>
+                {% if form.role.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.role.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Register</button>
+        </form>
+
+        <p class="text-center text-gray-500 text-sm mt-4">
+            Already have an account? <a href="{% url 'login' %}" class="text-blue-500 hover:underline">Login</a>
+        </p>
+    </div>
+</body>
+</html>

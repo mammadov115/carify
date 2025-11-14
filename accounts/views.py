@@ -11,7 +11,7 @@ class RegisterView(View):
     """
     Handles user registration for buyers and dealers.
     """
-    template_name = "accounts/register.html"
+    template_name = "register.html"
 
     def get(self, request):
         form = CustomUserCreationForm()
@@ -38,7 +38,7 @@ class LoginView(View):
     """
     Handles user login.
     """
-    template_name = "accounts/login.html"
+    template_name = "login.html"
 
     def get(self, request):
         form = CustomAuthenticationForm()
@@ -67,3 +67,4 @@ class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         return redirect("home")
+
