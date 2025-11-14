@@ -45,7 +45,7 @@ class LoginView(View):
         return render(request, self.template_name, {"form": form})
 
     def post(self, request):
-        form = CustomAuthenticationForm(request.POST)
+        form = CustomAuthenticationForm(request, request.POST)
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
