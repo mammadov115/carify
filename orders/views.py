@@ -7,8 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import redirect
 from .models import Order, OrderItem
-import json
-
+from django.contrib import messages
 
 
 class CreateOrderView(View):
@@ -52,6 +51,7 @@ class CreateOrderView(View):
                 "type": product_type,
                 "id": product.id,
                 "quantity": 1,
+                "price": float(product.price)
             })
 
         # Save back to session
@@ -91,6 +91,7 @@ class OrderListView(LoginRequiredMixin, View):
             product.type = product_type
 
             products.append(product)
+            print(total, product.price)
             quantity += item.get("quantity", 1)
             total += product.price
 
@@ -121,56 +122,70 @@ class RemoveOrderItemView(LoginRequiredMixin, View):
 
 class CreateOrderFromProductsView(LoginRequiredMixin, View):
     """
-    Handles creating an Order with multiple products (Cars and SpareParts)
-    from a POST request containing a products list, buyer_number, and notes.
+    Creates an Order using:
+    - Product list from session
+    - buyer_number, notes, total from POST form
     """
 
     def post(self, request, *args, **kwargs):
-        try:
-            # Parse JSON body
-            data = json.loads(request.body)
-            products = data.get("products", [])
-            buyer_number = data.get("buyer_number", "")
-            notes = data.get("notes", "")
-        except json.JSONDecodeError:
-            return HttpResponseBadRequest("Invalid JSON.")
+        # 1. Get products from session
+        cart = request.session.get("order_items", {})
 
-        if not products or not buyer_number:
-            return HttpResponseBadRequest("Products list and buyer_number are required.")
+        if not cart:
+            return HttpResponseBadRequest("Cart is empty.")
 
-        # Create the main Order object
+        # 2. Get form data
+        buyer_number = request.POST.get("phone")
+        notes = request.POST.get("notes", "")
+
+        if not buyer_number:
+            messages.error(request, "Number is required." )
+            return redirect("orders")
+
+
+
+
+        # 3. Create Order
         order = Order.objects.create(
             user=request.user,
             buyer_number=buyer_number,
-            notes=notes
+            notes=notes,
         )
 
-        # Loop through products and create OrderItem for each
-        for item in products:
+        # 4. Loop through cart items
+        total = 0
+        for item in cart:
             product_type = item.get("type")
             product_id = item.get("id")
             quantity = item.get("quantity", 1)
-            price = item.get("price", None)
+            price = item.get("price")
+            total += price
 
             if product_type == "car":
                 product_obj = Car.objects.filter(id=product_id).first()
             elif product_type == "sparepart":
                 product_obj = SparePart.objects.filter(id=product_id).first()
             else:
-                continue  # skip invalid type
+                continue
 
             if not product_obj:
-                continue  # skip if product not found
+                continue
+            
+            order.total = total
+            order.save()
 
-            # Create OrderItem
+
             OrderItem.objects.create(
                 order=order,
                 product_type=product_type,
                 car=product_obj if product_type == "car" else None,
                 spare_part=product_obj if product_type == "sparepart" else None,
                 quantity=quantity,
-                price=price
+                price=product_obj.price
             )
 
-        # Optionally, return JSON response or redirect
-        return JsonResponse({"success": True, "order_id": order.id})
+        # Clear cart after successful order
+        # if "order_items" in request.session:
+        #     del request.session["order_items"]
+
+        return render(request, "order_list.html")

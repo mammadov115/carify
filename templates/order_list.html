@@ -332,7 +332,7 @@
               </dd>
             </dl>
 
-            <form method="post" action="">
+            <form method="post" action="{% url "send-orders" %}">
               {% csrf_token %}
               <div class="mb-3">
                 <label for="phone" class="form-label small">Contact Phone</label>

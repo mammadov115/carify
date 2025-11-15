@@ -12,6 +12,7 @@ class Order(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='orders')
     buyer_number = models.CharField(max_length=20)  # phone number or contact
     notes = models.TextField(blank=True, null=True)
+    total = models.FloatField(default=0)
     is_confirmed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
