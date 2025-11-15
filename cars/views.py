@@ -1,10 +1,10 @@
 from django.views.generic import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from cars.models import Car
 # Create your views here.
 
 
-class HomeView(LoginRequiredMixin, ListView):
+class HomeView(ListView):
     """
     Displays a list of available cars on the home page.
     Only authenticated users can access this view.

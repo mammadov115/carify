@@ -18,7 +18,6 @@ class BuyerProfileInline(admin.StackedInline):
         super().save_model(request, obj, form, change)
 
 
-
 class DealerProfileInline(admin.StackedInline):
     """
     Inline admin for DealerProfile.
@@ -28,7 +27,6 @@ class DealerProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Dealer Profile'
     fk_name = 'user'
-
 
 
 @admin.register(CustomUser)
@@ -88,7 +86,6 @@ class BuyerProfileAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
-
 @admin.register(DealerProfile)
 class DealerProfileAdmin(admin.ModelAdmin):
     """
@@ -100,3 +97,11 @@ class DealerProfileAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.clean()
         super().save_model(request, obj, form, change)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """
+        Filter the user dropdown so it shows only users with role='dealer'.
+        """
+        if db_field.name == 'user':
+            kwargs['queryset'] = CustomUser.objects.filter(role='dealer')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
