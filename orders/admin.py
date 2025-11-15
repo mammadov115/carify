@@ -1,25 +1,48 @@
 from django.contrib import admin
-from django.contrib.contenttypes.admin import GenericTabularInline, GenericStackedInline
-from .models import Order
+from .models import Order, OrderItem
 
 
-class OrderInline(GenericTabularInline):
+class OrderItemInline(admin.TabularInline):
     """
-    Inline view for orders in related models (Car or SparePart).
+    Inline admin for displaying OrderItem objects inside the Order admin page.
+    Allows adding/editing multiple items per order.
     """
-    model = Order
+    model = OrderItem
     extra = 1
-    readonly_fields = ('created_at', 'updated_at')
+    readonly_fields = ('product',)
+    fields = ('product_type', 'car', 'spare_part', 'quantity', 'price', 'product')
+    autocomplete_fields = ('car', 'spare_part')
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     """
     Admin configuration for the Order model.
-    Displays user, ordered item, quantity, and status.
+    Displays buyer info, notes, and inline order items.
     """
-    list_display = ('id', 'user', 'item', 'quantity', 'is_confirmed', 'created_at')
-    list_filter = ('is_confirmed', 'created_at', 'content_type')
-    search_fields = ('user__username', 'item__name')
+    list_display = ('id', 'user', 'buyer_number', 'is_confirmed', 'created_at', 'updated_at')
+    list_filter = ('is_confirmed', 'created_at', 'updated_at')
+    search_fields = ('user__username', 'buyer_number', 'notes')
     readonly_fields = ('created_at', 'updated_at')
+    inlines = [OrderItemInline]
     ordering = ('-created_at',)
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'buyer_number', 'notes', 'is_confirmed')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at')
+        }),
+    )
+
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the OrderItem model.
+    Allows quick filtering and searching by product type.
+    """
+    list_display = ('id', 'order', 'product_type', 'product', 'quantity', 'price')
+    list_filter = ('product_type',)
+    search_fields = ('order__id', 'car__name', 'spare_part__name')
+    autocomplete_fields = ('car', 'spare_part')

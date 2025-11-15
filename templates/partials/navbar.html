@@ -7,8 +7,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url "home" %}">Home</a></li>
-                <li class="nav-item"><a class="nav-link {% if request.path == '/cars/' %}active{% endif %}" href="{% url "cars" %}">Cars</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.path == '/cars/' %}active{% endif %}" href="{% url 'cars' %}">Cars</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.path == '/parts/' %}active{% endif %}" href="#">Parts</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.path == '/about/' %}active{% endif %}" href="#">About</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.path == '/contact/' %}active{% endif %}" href="#">Contact</a></li>
@@ -17,6 +17,18 @@
                 <input class="form-control me-2" type="search" placeholder="Search cars & parts..." aria-label="Search">
                 <button class="btn btn-outline-danger" type="submit">Search</button>
             </form>
+            <!-- Shopping Cart Icon with Bootstrap Icon -->
+            <a class="btn btn-outline-danger position-relative me-3" href="{% url 'order-list' %}">
+                <i class="bi bi-cart-fill"></i> <!-- Cart Icon -->
+                {% with request.session.order_items|length as cart_count %}
+                    {% if cart_count > 0 %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ cart_count }}
+                            <span class="visually-hidden">items in cart</span>
+                        </span>
+                    {% endif %}
+                {% endwith %}
+            </a>
             {% if user.is_authenticated %}
                 <span class="navbar-text text-white me-2">Hello, {{ user.username }}</span>
                 <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>

@@ -1,69 +1,46 @@
 from django.db import models
+from cars.models import Car
+from spareparts.models import SparePart
 from accounts.models import CustomUser
-
 
 
 class Order(models.Model):
     """
-    Represents an order for a product, which can be either a Car or a SparePart.
-    The actual product instance can be accessed via the `product` property.
+    Represents a single order by a user.
+    An order can have multiple items (cars or spare parts).
     """
-    PRODUCT_CHOICES = (
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='orders')
+    buyer_number = models.CharField(max_length=20)  # phone number or contact
+    notes = models.TextField(blank=True, null=True)
+    is_confirmed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Order #{self.id} by {self.user}"
+
+
+class OrderItem(models.Model):
+    """
+    Represents a single product in an order.
+    Can be either a Car or a SparePart.
+    """
+    ORDER_PRODUCT_TYPE = (
         ('car', 'Car'),
         ('sparepart', 'SparePart'),
     )
 
-    # User who made the order
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='orders'
-    )
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    product_type = models.CharField(max_length=20, choices=ORDER_PRODUCT_TYPE)
+    car = models.ForeignKey(Car, null=True, blank=True, on_delete=models.SET_NULL)
+    spare_part = models.ForeignKey(SparePart, null=True, blank=True, on_delete=models.SET_NULL)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
-    # Product information
-    product_type = models.CharField(
-        max_length=20,
-        choices=PRODUCT_CHOICES,
-        help_text="Select whether the order is for a Car or a SparePart."
-    )
-    product_id = models.PositiveIntegerField(
-        help_text="ID of the selected product."
-    )
-
-    # Order details
-    quantity = models.PositiveIntegerField(
-        default=1,
-        help_text="Number of units ordered."
-    )
-    is_confirmed = models.BooleanField(
-        default=False,
-        help_text="Whether the order has been confirmed."
-    )
-
-    # Timestamps
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ['-created_at']
-        verbose_name = "Order"
-        verbose_name_plural = "Orders"
+    def __str__(self):
+        return f"{self.product_type.title()} in Order #{self.order.id}"
 
     @property
     def product(self):
-        """
-        Returns the actual product instance based on the product_type and product_id.
-        If the product does not exist, returns None.
-        """
-        if self.product_type == 'car':
-            from cars.models import Car
-            return Car.objects.filter(id=self.product_id).first()
-        elif self.product_type == 'sparepart':
-            from spareparts.models import SparePart
-            return SparePart.objects.filter(id=self.product_id).first()
-        return None
-
-    def __str__(self):
-        product_instance = self.product
-        product_name = product_instance.name if product_instance else "Unknown Product"
-        return f"Order #{self.id} by {self.user} for {product_name}"
+        """Returns the actual product object"""
+        return self.car if self.product_type == 'car' else self.spare_part

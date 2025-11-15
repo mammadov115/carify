@@ -32,7 +32,7 @@
     <div class="position-absolute top-50 start-50 translate-middle text-white">
         <h1 class="fw-bold display-4">{{ car.brand }} {{ car.model }}</h1>
         <p class="lead">Drive Your Dreams - Imported from Korea</p>
-        <a href="#contact-form" class="btn btn-cta btn-lg me-2">Book Test Drive</a>
+        <a href="{% url "create-order" product_type="car" product_id=car.pk %}" class="btn btn-cta btn-lg me-2">Buy Now</a>
         <a href="#order-parts" class="btn btn-outline-light btn-lg">Order Parts</a>
     </div>
 </section>

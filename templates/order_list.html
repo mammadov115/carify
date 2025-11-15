@@ -1,0 +1,437 @@
+{# templates/orders/order_detail.html #}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Drive Your Dreams</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <!-- Favicon -->
+  <link rel="icon" href="">
+
+  <style>
+    /* Color palette */
+    :root{
+      --black: #000000;
+      --accent: #FF0000;
+      --light-gray: #F5F5F5;
+      --white: #FFFFFF;
+      --muted: #6c757d;
+    }
+
+    html, body {
+      font-family: "Poppins", sans-serif;
+      background-color: var(--light-gray);
+      color: var(--black);
+      scroll-behavior: smooth;
+    }
+
+    /* Header */
+    .navbar {
+      background-color: var(--white);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .navbar-brand {
+      font-weight: 700;
+      color: var(--black) !important;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      height: 360px;
+      display: flex;
+      align-items: center;
+      color: var(--white);
+      overflow: hidden;
+      background-color: var(--black);
+    }
+    .hero .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.6));
+      z-index: 1;
+    }
+    .hero .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: .5rem;
+    }
+    .hero p.lead {
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+      font-weight: 400;
+    }
+
+    /* Buttons */
+    .btn-primary-cta {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: var(--white);
+      font-weight: 700;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .btn-primary-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(255,0,0,0.18);
+    }
+    .btn-secondary {
+      background-color: var(--white);
+      border: 1px solid #e6e6e6;
+      color: var(--black);
+    }
+
+    /* Product card */
+    .product-card {
+      background: var(--white);
+      border-radius: .5rem;
+      overflow: hidden;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    }
+    .product-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--black);
+    }
+    .specs li {
+      font-size: .95rem;
+      color: var(--muted);
+    }
+
+    /* Order summary */
+    .summary-card {
+      border-radius: .5rem;
+      background: var(--white);
+      padding: 1.25rem;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+    }
+
+    /* Small helpers */
+    .tag-available {
+      color: #0f5132;
+      background: #d1e7dd;
+      padding: .25rem .5rem;
+      border-radius: .25rem;
+      font-weight: 600;
+      font-size: .85rem;
+    }
+    .tag-sold {
+      color: #6f1a1a;
+      background: #f8d7da;
+      padding: .25rem .5rem;
+      border-radius: .25rem;
+      font-weight: 600;
+      font-size: .85rem;
+    }
+
+    /* Responsive adjustments */
+    @media(min-width: 992px){
+      .hero { height: 420px; }
+      .hero h1 { font-size: 3.2rem; }
+    }
+
+    /* Fade-in on scroll */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .6s ease, transform .6s ease;
+      will-change: opacity, transform;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  {% include "partials/navbar.html" %}
+
+  <!-- Hero -->
+  <header class="hero" role="banner" aria-hidden="false" style="background-image: url(''); background-size: cover; background-position: center;">
+    <div class="overlay"></div>
+    <div class="container hero-content text-white">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1>Drive Your Dreams</h1>
+          <p class="lead">Import premium cars and high-quality spare parts from Korea — fast, secure, and reliable.</p>
+          <div>
+            <a href="{% url "cars" %}" class="btn btn-primary-cta me-2">View Cars</a>
+            <a href="" class="btn btn-secondary">Order Parts</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="py-5" role="main">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Left: Product / images -->
+        <div class="col-lg-8">
+          {% for order in orders %}
+            <div class="product-card p-3 fade-in mb-2" data-fade>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <!-- Carousel for product images -->
+                  <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" aria-label="Product images">
+                    <div class="carousel-inner">
+                      
+                      {% if order.images.all %}
+                        {% for img in order.images.all %}
+                          <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{ img.image.url }}" class="d-block w-100" alt="{{ order.product.name }} image {{ forloop.counter }}">
+                          </div>
+                        {% endfor %}
+                      {% else %}
+                        <div class="carousel-item active">
+                          <img src="" class="d-block w-100" alt="No image available">
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev" aria-label="Previous image">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next" aria-label="Next image">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <h2 class="mb-1">{{ order }}</h2>
+                  <p class="product-price">{{ order.price }} $</p>
+
+                  {% comment %} Available status {% endcomment %}
+                  {% comment %} <div class="mb-3">
+                    {% if order.product.is_available %}
+                      <span class="tag-available" aria-hidden="true">Available</span>
+                    {% else %}
+                      <span class="tag-sold" aria-hidden="true">Unavailable</span>
+                    {% endif %}
+                  </div> {% endcomment %}
+
+                  <ul class="list-unstyled specs mb-3">
+                    {% for spec in order.features.all %}
+                      <li>• {{ spec }}</li>
+                    {% empty %}
+                      <li class="text-muted">No specs available.</li>
+                    {% endfor %}
+                  </ul>
+
+                  <p class="text-muted">{{ order.description|default:"No description provided." }}</p>
+
+                  <div class="d-flex gap-2 mt-3">
+                    <form action="{% url 'order-remove' product_type=order.type|lower product_id=order.id %}" method="get" aria-label="Cancel">
+                      {% comment %} {% csrf_token %} {% endcomment %}
+                      <input type="hidden" name="quantity" value="{{ order.quantity }}">
+                      <button type="submit" class="btn btn-primary-cta">Cancel</button>
+                    </form>
+
+                    <a class="btn btn-secondary" href="{% url "car-detail" slug=order.slug %}" role="button">Quick View</a>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="my-3">
+
+              <section aria-labelledby="order-info">
+                <h3 id="order-info" class="h5 mb-2">Order Information</h3>
+                <dl class="row mb-0">
+                  <dt class="col-sm-4">Order ID</dt>
+                  <dd class="col-sm-8">#{{ order.id }}</dd>
+
+                  {% comment %} <dt class="col-sm-4">Placed By</dt>
+                  <dd class="col-sm-8">{{ order.user.get_full_name}}</dd> {% endcomment %}
+
+                  <dt class="col-sm-4">Quantity</dt>
+                  <dd class="col-sm-8">{{ order.quantity }}</dd>
+
+                  <dt class="col-sm-4">Status</dt>
+                  <dd class="col-sm-8">
+                    {% if order.is_confirmed %}
+                      <span class="badge bg-success">Confirmed</span>
+                    {% else %}
+                      <span class="badge bg-secondary">Pending</span>
+                    {% endif %}
+                  </dd>
+                </dl>
+              </section>
+            </div>
+          {% endfor %}
+
+          <!-- Related / Promotions -->
+          <div class="mt-4 fade-in" data-fade>
+            <h4>Related Listings</h4>
+            <div class="row g-3">
+              {% for related in related_products %}
+                <div class="col-sm-6 col-md-4">
+                  <article class="product-card p-2">
+                    <img src="{{ related.image.url }}" alt="{{ related.name }}" class="img-fluid mb-2" loading="lazy">
+                    <h6 class="mb-1">{{ related.name }}</h6>
+                    <p class="mb-1 text-muted small">{{ related.short_description|truncatechars:60 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <span class="product-price small">{{ related.price|default:"-" }}</span>
+                      <a href="" class="btn btn-sm btn-outline-secondary">View</a>
+                    </div>
+                  </article>
+                </div>
+              {% empty %}
+                <p class="text-muted">No related products found.</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Summary / Actions -->
+        <aside class="col-lg-4">
+          <div class="summary-card fade-in" data-fade>
+            <h5 class="mb-3">Order Summary</h5>
+
+            {% comment %} <div class="d-flex align-items-center mb-3">
+              <div style="width:64px; height:48px; overflow:hidden; border-radius:.5rem; background:#f0f0f0;" aria-hidden="true">
+                <img src="{{ order.main_image.url }}" alt="{{ order.product.name }} thumbnail" class="img-fluid">
+              </div>
+              <div class="ms-3">
+                <div class="fw-bold">{{ order.product.name }}</div>
+                <div class="text-muted small">{{ order.product.model|default:"Model info" }}</div>
+              </div>
+            </div> {% endcomment %}
+
+            <dl class="row mb-3">
+              {% comment %} <dt class="col-6 small text-muted">Unit Price</dt>
+              <dd class="col-6 text-end product-price">{{ order.product.price|default:"-" }}</dd> {% endcomment %}
+
+              <dt class="col-6 small text-muted mb-3">Quantity</dt>
+              <dd class="col-6 text-end">{{ total_quantity }}</dd>
+
+              <dt class="col-6 small text-muted">Subtotal</dt>
+              <dd class="col-6 text-end fw-bold">
+                {% if total %}
+                  {{ total }} $
+                {% else %}
+                  -
+                {% endif %}
+              </dd>
+            </dl>
+
+            <form method="post" action="">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="phone" class="form-label small">Contact Phone</label>
+                <input id="phone" name="phone" type="tel" class="form-control" placeholder="+994 55 555 55 55" aria-describedby="phoneHelp" required>
+                <div id="phoneHelp" class="form-text small">We will contact you to confirm delivery details.</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="notes" class="form-label small">Notes</label>
+                <textarea id="notes" name="notes" rows="3" class="form-control" placeholder="Any special instructions..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary-cta w-100 mb-2" aria-label="Confirm order">
+                Confirm Order
+              </button>
+            </form>
+
+            <button class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancel Order</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- Cancel modal -->
+  <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="cancelModalLabel" class="modal-title">Cancel Order</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to cancel this order? This action cannot be undone.
+        </div>
+        <div class="modal-footer">
+          <form method="post" action="">
+            {% csrf_token %}
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-danger">Yes, cancel order</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-5 py-4" role="contentinfo" style="background:var(--white); border-top: 1px solid #eee;">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-4">
+          <strong>KoreaAuto</strong> &copy; {{ now.year }}
+        </div>
+        <div class="col-md-4 text-center">
+          <a href="#" class="me-2" aria-label="Instagram"><img src="" alt="Instagram" width="22"></a>
+          <a href="#" class="me-2" aria-label="Facebook"><img src="" alt="Facebook" width="22"></a>
+          <a href="#" aria-label="LinkedIn"><img src="" alt="LinkedIn" width="22"></a>
+        </div>
+        <div class="col-md-4 text-end">
+          <form class="d-flex" role="search" method="post" action="">
+            {% csrf_token %}
+            <input name="email" type="email" class="form-control form-control-sm me-2" placeholder="Your email" aria-label="Email for newsletter" required>
+            <button class="btn btn-sm btn-primary-cta" type="submit">Subscribe</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Tiny JS for animations / parallax -->
+  <script>
+    // Fade-in on scroll
+    (function(){
+      const observers = document.querySelectorAll('[data-fade]');
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      observers.forEach(el => io.observe(el));
+    })();
+
+    // Simple parallax effect on hero (only on desktop)
+    (function(){
+      const hero = document.querySelector('.hero');
+      if (!hero) return;
+      window.addEventListener('scroll', () => {
+        if (window.innerWidth < 992) return;
+        const y = window.scrollY;
+        hero.style.backgroundPosition = `center calc(50% + ${y * 0.12}px)`;
+      });
+    })();
+  </script>
+</body>
+</html>
