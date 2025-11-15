@@ -47,14 +47,15 @@ APPS = [
     # local apps
     'accounts.apps.AccountsConfig',
     'cars.apps.CarsConfig',
-    'spareparts.apps.SparepartsConfig'
+    'spareparts.apps.SparepartsConfig',
+    'orders.apps.OrdersConfig'
 ]
 
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    "drf_yasg",
+    'drf_yasg',
 ]
 
 INSTALLED_APPS += APPS + THIRD_PARTY_APPS
