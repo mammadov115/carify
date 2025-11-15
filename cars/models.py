@@ -20,6 +20,12 @@ class Car(models.Model):
     including dealer, technical specs, pricing, condition,
     main image, and features.
     """
+
+    featured = models.BooleanField(
+    default=False,
+    help_text="Check to feature this car on the homepage."
+    )
+    
     # Dealer
     dealer = models.ForeignKey(
         DealerProfile,
