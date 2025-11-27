@@ -185,7 +185,7 @@ class CreateOrderFromProductsView(LoginRequiredMixin, View):
             )
 
         # Clear cart after successful order
-        # if "order_items" in request.session:
-        #     del request.session["order_items"]
+        if "order_items" in request.session:
+            del request.session["order_items"]
 
         return render(request, "order_list.html")

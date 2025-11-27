@@ -1,0 +1,86 @@
+.font-inter {
+  font-family: 'Inter', sans-serif !important;
+}
+
+.korea-stock-icon {
+    display: inline-block;
+    font-size: 1.2rem; /* icon ölçüsü */
+    background: linear-gradient(135deg, #003478, #C60C30, #FFD700); /* mavi -> qırmızı -> gold */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent; /* bəzi brauzerlərdə lazım ola bilər */
+}
+
+.gold-icon {
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #FFD86F, #E29A00);
+    -webkit-background-clip: text;
+    color: transparent;
+    font-size: 1.2rem;
+}
+
+.on-the-way-icon {
+    display: inline-block;
+    font-size: 1.2rem; /* icon ölçüsü */
+    background: linear-gradient(135deg, #007BFF, #FFA500, #FFD700); /* mavi -> narıncı -> soft gold */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent; /* bəzi brauzerlərdə lazım ola bilər */
+}
+
+.favorites-card {
+    background: linear-gradient(135deg, #1E3A8A, #3B82F6); /* elegant blue gradient */
+    color: #fff;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.favorites-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+}
+
+.favorites-card .card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.favorite-icon {
+    font-size: 2rem;
+    color: #FF4757; /* elegant heart red */
+    margin-top: 1rem;
+}
+
+
+.car-card {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.car-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+}
+
+.car-card .price {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #FF6B00; /* price highlight */
+}
+
+.favorite-icon {
+    font-size: 1.4rem;
+    color: #FF4757;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.favorite-icon:hover {
+    transform: scale(1.2);
+}

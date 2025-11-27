@@ -20,7 +20,7 @@ class OrderAdmin(admin.ModelAdmin):
     Admin configuration for the Order model.
     Displays buyer info, notes, and inline order items.
     """
-    list_display = ('id', 'user', 'buyer_number', 'is_confirmed', 'created_at', 'updated_at')
+    list_display = ('id', 'user','total', 'buyer_number', 'is_confirmed', 'created_at', 'updated_at')
     list_filter = ('is_confirmed', 'created_at', 'updated_at')
     search_fields = ('user__username', 'buyer_number', 'notes')
     readonly_fields = ('created_at', 'updated_at')
@@ -28,7 +28,7 @@ class OrderAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
     fieldsets = (
         (None, {
-            'fields': ('user', 'buyer_number', 'notes', 'is_confirmed')
+            'fields': ('user','total', 'buyer_number', 'notes', 'is_confirmed')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at')
