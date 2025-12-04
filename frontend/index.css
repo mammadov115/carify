@@ -84,3 +84,27 @@
 .favorite-icon:hover {
     transform: scale(1.2);
 }
+
+
+
+.card-text {
+  font-size: 13px;
+}
+
+@media (min-width: 576px) { /* s, */
+  .card-text {
+    font-size: 10px;
+  }
+}
+
+@media (min-width: 768px) { /* md */
+  .card-text {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: 1200px) { /* xl */
+  .car-text {
+    font-size: 32px;
+  }
+}
