@@ -3,12 +3,12 @@ from .models import Car, CarFeature, CarImage, CarReview, FavoriteCar
 from django import forms
 from django.forms.widgets import ClearableFileInput
 
-class CarFeatureInline(admin.TabularInline):
-    """
-    Inline editor for car features within the Car admin page.
-    """
-    model = Car.features.through  # ManyToMany through model
-    extra = 1
+# class CarFeatureInline(admin.TabularInline):
+#     """
+#     Inline editor for car features within the Car admin page.
+#     """
+#     model = Car.features.through  # ManyToMany through model
+#     extra = 1
 
 
 class CarImageInline(admin.TabularInline):
@@ -25,9 +25,9 @@ class CarAdmin(admin.ModelAdmin):
     Admin configuration for Car model.
     Includes dealer info, technical specs, pricing, condition, and features.
     """
-    list_display = ("brand", "model", "year", "price", "condition", "dealer")
+    list_display = ("brand", "model", "year", "price", "condition")
     list_filter = ("brand", "condition", "fuel_type", "transmission", "is_negotiable")
-    search_fields = ("brand", "model", "dealer__user__username")
+    search_fields = ("brand", "model")
     prepopulated_fields = {"slug": ("brand", "model", "year")}
     inlines = [CarImageInline]
     ordering = ("-created_at",)
@@ -43,33 +43,33 @@ class CarAdmin(admin.ModelAdmin):
     #             objs.append(CarImage.objects.create(car=car, image=img))
     #     return objs
 
-@admin.register(CarFeature)
-class CarFeatureAdmin(admin.ModelAdmin):
-    """
-    Admin configuration for CarFeature model.
-    """
-    list_display = ("name",)
-    search_fields = ("name",)
-    ordering = ("name",)
+# @admin.register(CarFeature)
+# class CarFeatureAdmin(admin.ModelAdmin):
+#     """
+#     Admin configuration for CarFeature model.
+#     """
+#     list_display = ("name",)
+#     search_fields = ("name",)
+#     ordering = ("name",)
 
 
-@admin.register(CarReview)
-class CarReviewAdmin(admin.ModelAdmin):
-    """
-    Admin configuration for CarReview model.
-    """
-    list_display = ("car", "user", "rating", "created_at")
-    list_filter = ("rating", "created_at")
-    search_fields = ("car__brand", "car__model", "user__username")
-    readonly_fields = ("created_at",)
+# @admin.register(CarReview)
+# class CarReviewAdmin(admin.ModelAdmin):
+#     """
+#     Admin configuration for CarReview model.
+#     """
+#     list_display = ("car", "user", "rating", "created_at")
+#     list_filter = ("rating", "created_at")
+#     search_fields = ("car__brand", "car__model", "user__username")
+#     readonly_fields = ("created_at",)
 
 
-@admin.register(FavoriteCar)
-class FavoriteCarAdmin(admin.ModelAdmin):
-    """
-    Admin configuration for FavoriteCar (wishlist) model.
-    """
-    list_display = ("user", "car", "added_at")
-    search_fields = ("user__username", "car__brand", "car__model")
-    readonly_fields = ("added_at",)
-    list_filter = ("added_at",)
+# @admin.register(FavoriteCar)
+# class FavoriteCarAdmin(admin.ModelAdmin):
+#     """
+#     Admin configuration for FavoriteCar (wishlist) model.
+#     """
+#     list_display = ("user", "car", "added_at")
+#     search_fields = ("user__username", "car__brand", "car__model")
+#     readonly_fields = ("added_at",)
+#     list_filter = ("added_at",)

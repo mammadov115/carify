@@ -1,236 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Carify Korea - Drive Your Dreams</title>
-    <!-- Bootstrap CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap Icons CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" />
+    <link rel="stylesheet" href="/static/index.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" />
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #F5F5F5;
-            color: #000000;
-        }
-
-        /* Navbar */
-        .navbar-dark .navbar-nav .nav-link.active {
-            color: #FF0000;
-            font-weight: 700;
-        }
-        .navbar-dark .navbar-nav .nav-link:hover {
-            color: #FF0000;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: url('https://picsum.photos/1920/800?car,korea') center/cover no-repeat fixed;
-            min-height: 600px;
-            position: relative;
-            color: #FFFFFF;
-        }
-        .hero-overlay {
-            background-color: rgba(0,0,0,0.6);
-            position: absolute;
-            inset: 0;
-        }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            top: 50%;
-            transform: translateY(-50%);
-            text-align: center;
-        }
-        .hero h1 {
-            font-weight: 700;
-            font-size: 3rem;
-        }
-        .hero p {
-            font-weight: 400;
-            font-size: 1.25rem;
-        }
-        .btn-cta {
-            transition: transform 0.2s, box-shadow 0.3s;
-        }
-        .btn-cta:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255,0,0,0.4);
-        }
-
-        /* Cards */
-        .card:hover {
-            transform: translateY(-7px);
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 15px 25px rgba(0,0,0,0.3);
-        }
-        .card-title {
-            color: #FF0000;
-            font-weight: 700;
-        }
-        .card-text {
-            font-weight: 400;
-        }
-
-        /* Sections */
-        section {
-            padding: 5rem 0;
-        }
-        .section-title {
-            font-weight: 700;
-            margin-bottom: 3rem;
-            text-align: center;
-            color: #FF0000;
-        }
-
-        /* Testimonials */
-        .testimonial-card {
-            background-color: #000000;
-            color: #FFFFFF;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: transform 0.3s;
-        }
-        .testimonial-card:hover {
-            transform: translateY(-5px);
-        }
-
-        /* Footer */
-        .footer {
-            background-color: #000000;
-            color: #FFFFFF;
-            padding: 3rem 0;
-        }
-        .footer a {
-            color: #FF0000;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsive Hero */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .hero p {
-                font-size: 1rem;
-            }
-        }
+      .font-inter {
+        font-family: 'Inter', sans-serif;
+      }
+      
+      /* Example: Adding some basic styling for better visualization */
+      .favorite-icon {
+        color: red;
+        font-size: 1.5rem;
+      }
+      
+      .gold-icon {
+        color: gold;
+      }
+      
+      .korea-stock-icon {
+        color: #17a2b8;
+        /* Info color example */
+      }
+      
+      .on-the-way-icon {
+        color: #ffc107;
+        /* Warning color example */
+      }
     </style>
-</head>
-<body>
+  </head>
 
-<!-- Navbar -->
-{% include "partials/navbar.html" %}
+  <body class="font-inter">
+    <nav class="navbar navbar-expand-lg bg-primary navbar-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="#">Action</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#">Another action</a>
+                </li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+            </li>
+          </ul>
+          <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+            <button class="btn btn-outline-light" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
 
-<!-- Hero Section -->
-<section class="hero d-flex align-items-center justify-content-center">
-    <div class="hero-overlay"></div>
-    <div class="hero-content container">
-        <h1>Drive Your Dreams</h1>
-        <p>Import premium cars and spare parts from Korea effortlessly. Trusted, fast, and reliable.</p>
-        <a href="#featured-cars" class="btn btn-danger btn-lg btn-cta me-2">View Cars</a>
-        <a href="#featured-parts" class="btn btn-outline-danger btn-lg btn-cta">Order Parts</a>
-    </div>
-</section>
+    <div class="container mt-5">
+      <div class="row">
+        <!-- Filter -->
+        <div class="col-12 col-lg-3 order-lg-1">
+          <div class="bg-white shadow p-3 mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="statusFilter" id="auctionCheck" />
+              <label class="form-check-label" for="auctionCheck">
+                <i class="bi bi-currency-dollar gold-icon"></i>
+                Hərrac maşınları
+              </label>
+            </div>
 
-<!-- Featured Cars Section -->
-<section id="featured-cars" class="bg-light">
-    <div class="container">
-        <h2 class="section-title">Featured Cars</h2>
-        <div class="row g-4">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="statusFilter" id="koreaStockCheck" checked />
+              <label class="form-check-label" for="koreaStockCheck">
+                <i class="bi bi-box-seam-fill korea-stock-icon"></i>
+                Koreya stokumuz
+              </label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="statusFilter" id="onTheWayCheck" />
+              <label class="form-check-label" for="onTheWayCheck">
+                <i class="bi bi-truck on-the-way-icon"></i>
+                Yolda satılır
+              </label>
+            </div>
+          </div>
+
+          <div class="bg-white shadow p-3 mt-2 mb-3">
+            <select class="form-select mb-2" aria-label="Select Make">
+              <option selected>Marka seçin...</option>
+              <option value="1">Toyota</option>
+              <option value="2">BMW</option>
+            </select>
+
+            <select class="form-select" aria-label="Select Model">
+              <option selected>Model seçin...</option>
+              <option value="1">Corolla</option>
+              <option value="2">3 Series</option>
+            </select>
+          </div>
+
+          <div class="bg-white shadow p-3 mt-2 mb-2">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="yearFilter" id="year2016Check" />
+              <label class="form-check-label" for="year2016Check">2016</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="yearFilter" id="year2017Check" checked />
+              <label class="form-check-label" for="year2017Check">2017</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="yearFilter" id="year2018Check" />
+              <label class="form-check-label" for="year2018Check">2018</label>
+            </div>
+          </div>
+
+          <input class="btn btn-primary w-100 mb-4" type="submit" value="Axtar" />
+        </div>
+
+        <!-- Cars -->
+        <div class="col-12 col-lg-9 order-lg-2">
+          <div class="row">
+            <div class="col-6 col-lg-3 mb-2">
+              <div class="card favorites-card text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                  <h5 class="card-title">Favorites</h5>
+                  <p class="card-text">Sizin favori avtomobilləriniz</p>
+                  <i class="bi bi-heart-fill favorite-icon"></i>
+                </div>
+              </div>
+            </div>
+
             {% for car in cars %}
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="{{ car.main_image.url }}" class="card-img-top" alt="{{ car.brand }} {{ car.model }} {{ car.year }}">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">{{ car.brand }} {{ car.model }} {{ car.year }}</h5>
-                            <p class="card-text mb-1">Price: ${{car.price}}</p>
-                            <p class="card-text mb-1">Condition: {{ car.condition }}</p>
-                            <p class="card-text mb-3">Key Features: {% for feature in car.features.all %}{{ feature }} {% endfor %}</p>
-                            <div class="mt-auto d-flex gap-2">
-                                <a href="{% url "car-detail" car.slug %}" class="btn btn-danger btn-cta flex-grow-1">View Details</a>
-                                
-                            </div>
-                        </div>
+              <div class="col-6 col-lg-3 mb-2">
+                <div class="card car-card position-relative">
+                  <div class="image-container position-relative">
+                    {% if car.condition == 'new' %}
+                      <span class="badge bg-success position-absolute top-0 start-0 m-2">Yeni</span>
+                    {% else %}
+                      <span class="badge bg-warning position-absolute top-0 start-0 m-2">Işlənmiş</span>
+                    {% endif %}
+                    <i class="bi {% if car.id|stringformat:"s" in request.session.favorites %}bi-heart-fill{% else %}bi-heart{% endif %} position-absolute top-0 end-0 m-2 favorite-icon" data-car-id="{{ car.id }}" ></i>
+                    <img src="{{ car.main_image.url }}" class="card-img-top" alt="Car Image" />
+
+                    <div class="price-bar position-absolute bottom-0 start-0 w-100 bg-dark text-white text-center p-2 opacity-75 border-bottom border-4 border-primary">{{ car.price|floatformat:0 }} $</div>
+                  </div>
+
+                  <div class="card-body">
+                    {% comment %} <h5 class="price">910,000₼</h5> {% endcomment %}
+                    <h6 class="card-title text-truncate">{{ car.brand }} - {{ car.model }}</h6>
+                    <p class="card-text">{{ car.year }} / {{ car.mileage }} km / Bakı</p>
+                    <div class="d-flex gap-2">
+                      <span class="badge bg-primary">Tam sığorta</span>
+                      <span class="badge bg-warning text-dark">İcarə</span>
                     </div>
+                  </div>
                 </div>
+              </div>
             {% endfor %}
-            <!-- Repeat dynamic cards with Django loop -->
+          </div>
+
+          <div class="row my-3">
+            <div class="col">
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                  {# Previous #}
+                  {% if page_obj.has_previous %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Əvvəlki</a>
+                    </li>
+                  {% else %}
+                    <li class="page-item disabled">
+                      <a class="page-link">Əvvəlki</a>
+                    </li>
+                  {% endif %}
+
+                  {# First page #}
+                  {% if page_obj.number > 2 %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page=1">1</a>
+                    </li>
+                    {% if page_obj.number > 3 %}
+                      <li class="page-item disabled">
+                        <a class="page-link">…</a>
+                      </li>
+                    {% endif %}
+                  {% endif %}
+
+                  {# Current -1, current, current +1 #}
+                  {% for num in page_obj.paginator.page_range %}
+                    {% if num >= page_obj.number|add:'-1' and num <= page_obj.number|add:'1' %}
+                      {% if page_obj.number == num %}
+                        <li class="page-item active">
+                          <a class="page-link">{{ num }}</a>
+                        </li>
+                      {% else %}
+                        <li class="page-item">
+                          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {# Last page #}
+                  {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
+                    {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+                      <li class="page-item disabled">
+                        <a class="page-link">…</a>
+                      </li>
+                    {% endif %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+                    </li>
+                  {% endif %}
+
+                  {# Next #}
+                  {% if page_obj.has_next %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.next_page_number }}">Növbəti</a>
+                    </li>
+                  {% else %}
+                    <li class="page-item disabled">
+                      <a class="page-link">Növbəti</a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </nav>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</section>
 
-<!-- Featured Parts Section -->
-<section id="featured-parts" class="bg-light">
-    <div class="container">
-        <h2 class="section-title">Spare Parts</h2>
-        <div class="row g-4">
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="card h-100 shadow-sm">
-                    <img src="https://picsum.photos/400/200?parts1" class="card-img-top" alt="Brake Pads">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Brake Pads</h5>
-                        <p class="card-text mb-1">Price: $120</p>
-                        <p class="card-text mb-3">Compatibility: Hyundai, Kia, Toyota</p>
-                        <a href="#" class="btn btn-danger btn-cta mt-auto">Order Now</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Repeat dynamic parts cards -->
-        </div>
-    </div>
-</section>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+  </body>
 
-<!-- Testimonials -->
-<section class="bg-dark text-white">
-    <div class="container">
-        <h2 class="section-title text-white">Customer Reviews</h2>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="testimonial-card">
-                    <p>"Excellent service, fast delivery, and top-quality cars imported from Korea!"</p>
-                    <h6 class="fw-bold mb-0">- John D.</h6>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="testimonial-card">
-                    <p>"Reliable spare parts, competitive prices, and excellent support."</p>
-                    <h6 class="fw-bold mb-0">- Sarah K.</h6>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="testimonial-card">
-                    <p>"Smooth process and quick shipping. Highly recommend for Korean imports!"</p>
-                    <h6 class="fw-bold mb-0">- Mike L.</h6>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Footer -->
-<footer class="footer">
-    <div class="container text-center">
-        <p>&copy; 2025 Carify Korea. All rights reserved.</p>
-        <p>
-            <a href="#">Facebook</a> |
-            <a href="#">Instagram</a> |
-            <a href="#">LinkedIn</a>
-        </p>
-        <form class="d-flex justify-content-center mt-3">
-            <input class="form-control me-2 w-50" type="email" placeholder="Subscribe to newsletter">
-            <button class="btn btn-danger" type="submit">Subscribe</button>
-        </form>
-    </div>
-</footer>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('.favorite-icon').click(function () {
+        var icon = $(this)
+        var carId = icon.data('car-id')
+    
+        $.ajax({
+          url: "{% url 'toggle_favorite' %}",
+          method: 'POST',
+          data: {
+            car_id: carId,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+          },
+          success: function (response) {
+            if (response.success) {
+              if (response.added) {
+                icon.removeClass('bi-heart').addClass('bi-heart-fill');
+              } else {
+                icon.removeClass('bi-heart-fill').addClass('bi-heart');
+              }
+            }
+          }
+        })
+      })
+    })
+  </script>
 </html>

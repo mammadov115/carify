@@ -1,25 +1,48 @@
 from django.views.generic import ListView
 from django.views.generic import DetailView
 from cars.models import Car
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 # Create your views here.
 
 
 class HomeView(ListView):
     """
     Displays a list of available cars on the home page.
-    Only authenticated users can access this view.
     """
     model = Car
     template_name = "home.html"
     context_object_name = "cars"
-    login_url = "login"
-    paginate_by = 9  # Optional: paginate 9 cars per page
+    paginate_by = 2  # Optional: paginate 9 cars per page
 
-    def get_queryset(self):
-        """
-        Return all cars ordered by newest first.
-        """
-        return Car.objects.filter(featured=True).order_by('-featured')
+    # def get_queryset(self):
+    #     """
+    #     Return all cars ordered by newest first.
+    #     """
+    #     return Car.objects.filter(featured=True).order_by('-featured')
+
+
+@require_POST
+def toggle_favorite(request):
+    car_id = request.POST.get('car_id')
+    if not car_id:
+        return JsonResponse({"success": False, "error": "No car id provided."})
+
+    # initialize session list if it doesn't exist
+    favorites = request.session.get('favorites', [])
+
+    if car_id in favorites:
+        favorites.remove(car_id)
+        added = False
+    else:
+        favorites.append(car_id)
+        added = True
+
+    request.session['favorites'] = favorites
+    request.session.modified = True
+
+    return JsonResponse({"success": True, "added": added, "favorites_count": len(favorites)})
+
 
 
 class CarDetailView(DetailView):

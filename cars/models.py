@@ -26,13 +26,6 @@ class Car(models.Model):
     help_text="Check to feature this car on the homepage."
     )
     
-    # Dealer
-    dealer = models.ForeignKey(
-        DealerProfile,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='cars'
-    )
 
     # Basic info
     brand = models.CharField(max_length=50)
@@ -50,6 +43,7 @@ class Car(models.Model):
             ('electric', 'Electric')
         ]
     )
+
     transmission = models.CharField(
         max_length=20,
         choices=[
@@ -57,15 +51,11 @@ class Car(models.Model):
             ('manual', 'Manual')
         ]
     )
+
     engine_volume = models.DecimalField(
         max_digits=3,
         decimal_places=1,
         help_text="Example: 1.6, 2.0, 3.5"
-    )
-    features = models.ManyToManyField(
-        CarFeature,
-        blank=True,
-        related_name='cars'
     )
 
     # Pricing
