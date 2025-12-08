@@ -1,25 +1,52 @@
 from django.db import models
 from django.utils.text import slugify
-from accounts.models import DealerProfile, CustomUser
 
 
-class CarFeature(models.Model):
-    """
-    Represents a specific feature or equipment of a car,
-    e.g., ABS, Parking Sensor, Bluetooth.
-    """
+class Brand(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
 
+class CarModel(models.Model):
+    name = models.CharField(max_length=100)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='models')
+
+    def __str__(self):
+        return f"{self.brand.name} {self.name}"
+
+
+class Year(models.Model):
+    year = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.year}"
+     
+
 class Car(models.Model):
     """
     Represents a car listing with detailed information,
-    including dealer, technical specs, pricing, condition,
+    including technical specs, pricing, condition,
     main image, and features.
     """
+
+
+    AUCTION = 'auction'
+    KOREA_STOCK = 'korea_stock'
+    ON_THE_WAY = 'on_the_way'
+
+    CATEGORY_CHOICES = [
+        (AUCTION, 'Hərrac maşınları'),
+        (KOREA_STOCK, 'Koreya stokumuz'),
+        (ON_THE_WAY, 'Yolda satılır'),
+    ]
+
+    category = models.CharField(
+        max_length=20,
+        choices=CATEGORY_CHOICES,
+        default=KOREA_STOCK
+    )
 
     featured = models.BooleanField(
     default=False,
@@ -28,9 +55,9 @@ class Car(models.Model):
     
 
     # Basic info
-    brand = models.CharField(max_length=50)
-    model = models.CharField(max_length=50)
-    year = models.PositiveIntegerField()
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, null=True)
+    model = models.ForeignKey(CarModel, on_delete=models.CASCADE, null=True)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE, null=True)
     slug = models.SlugField(max_length=200, unique=True, blank=True)
 
     # Technical details
@@ -109,53 +136,3 @@ class CarImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.car}"
-
-
-class CarReview(models.Model):
-    """
-    Represents a user's review of a car.
-    Includes rating (1-5) and comment.
-    """
-    car = models.ForeignKey(
-        Car,
-        on_delete=models.CASCADE,
-        related_name='reviews'
-    )
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='car_reviews'
-    )
-    rating = models.PositiveSmallIntegerField()  # 1–5
-    comment = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return f"Review for {self.car} by {self.user}"
-
-
-class FavoriteCar(models.Model):
-    """
-    Represents a user's favorite car (wishlist).
-    A user cannot favorite the same car multiple times.
-    """
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='favorite_cars'
-    )
-    car = models.ForeignKey(
-        Car,
-        on_delete=models.CASCADE,
-        related_name='favorited_by'
-    )
-    added_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('user', 'car')
-
-    def __str__(self):
-        return f"{self.user} → {self.car}"

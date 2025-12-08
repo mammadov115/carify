@@ -47,8 +47,6 @@ APPS = [
     # local apps
     'accounts.apps.AccountsConfig',
     'cars.apps.CarsConfig',
-    # 'spareparts.apps.SparepartsConfig',
-    # 'orders.apps.OrdersConfig'
 ]
 
 THIRD_PARTY_APPS = [
