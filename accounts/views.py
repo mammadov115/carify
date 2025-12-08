@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
-from accounts.models import CustomUser, BuyerProfile, DealerProfile
+from accounts.models import CustomUser
 from accounts.forms import CustomUserCreationForm, CustomAuthenticationForm
 
 

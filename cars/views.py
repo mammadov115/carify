@@ -1,28 +1,57 @@
 from django.views.generic import ListView
 from django.views.generic import DetailView
-from cars.models import Car
+from cars.models import Car, Brand, CarModel, Year
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db.models import Case, When
+from django.db.models import Q
 # Create your views here.
 
 
 class HomeView(ListView):
     """
-    Displays a list of available cars on the home page.
+    Displays a list of available cars on the home page with filtering.
     """
     model = Car
     template_name = "home.html"
     context_object_name = "cars"
-    paginate_by = 2  # Optional: paginate 9 cars per page
+    paginate_by = 11
     ordering = ["-created_at"]
-    
-    # def get_queryset(self):
-    #     """
-    #     Return all cars ordered by newest first.
-    #     """
-    #     return Car.objects.filter(featured=True).order_by('-featured')
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        # Filter based on GET parameters
+        category = self.request.GET.get("category")
+        brand_id = self.request.GET.get("brand")
+        model_id = self.request.GET.get("model")
+        year_id = self.request.GET.get("year")
+
+        filters = Q()
+        if category:
+            filters &= Q(category=category)
+        if brand_id:
+            filters &= Q(brand_id=brand_id)
+        if model_id:
+            filters &= Q(model_id=model_id)
+        if year_id:
+            filters &= Q(year_id=year_id)
+
+        return qs.filter(filters)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['brands'] = Brand.objects.all()
+        context['car_models'] = CarModel.objects.all()
+        context['years'] = Year.objects.all()
+
+        # Track selected filters for template
+        context['selected_category'] = self.request.GET.get("category", "")
+        context['selected_brand'] = int(self.request.GET.get("brand")) if self.request.GET.get("brand") else None
+        context['selected_model'] = int(self.request.GET.get("model")) if self.request.GET.get("model") else None
+        context['selected_year'] = int(self.request.GET.get("year")) if self.request.GET.get("year") else None
+
+        return context
 
 @require_POST
 def toggle_favorite(request):
@@ -45,6 +74,10 @@ def toggle_favorite(request):
 
     return JsonResponse({"success": True, "added": added, "favorites_count": len(favorites)})
 
+def car_models_by_brand(request, brand_id):
+    models = CarModel.objects.filter(brand_id=brand_id).values('id', 'name')
+    print(brand_id)
+    return JsonResponse(list(models), safe=False)
 
 
 # class CarDetailView(DetailView):
@@ -101,7 +134,9 @@ class FavoritesView(ListView):
         # Fetch only cars in favorites list
         # Case/When preserves the list order stored in session
         order = Case(*[
-            When(id=cid, then=pos) for pos, cid in enumerate(favorite_ids)
+            When(id=cid, then=pos) for pos, cid in enumerate(reversed(favorite_ids))
         ])
+
+        print(order)
 
         return Car.objects.filter(id__in=favorite_ids).order_by(order)

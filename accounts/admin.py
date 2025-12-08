@@ -1,32 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, BuyerProfile, DealerProfile
+from .models import CustomUser
 
 
-class BuyerProfileInline(admin.StackedInline):
-    """
-    Inline admin for BuyerProfile.
-    Shown inside CustomUser admin for buyers.
-    """
-    model = BuyerProfile
-    can_delete = False
-    verbose_name_plural = 'Buyer Profile'
-    fk_name = 'user'
-
-    def save_model(self, request, obj, form, change):
-        obj.clean()
-        super().save_model(request, obj, form, change)
-
-
-class DealerProfileInline(admin.StackedInline):
-    """
-    Inline admin for DealerProfile.
-    Shown inside CustomUser admin for dealers.
-    """
-    model = DealerProfile
-    can_delete = False
-    verbose_name_plural = 'Dealer Profile'
-    fk_name = 'user'
 
 
 @admin.register(CustomUser)
@@ -57,51 +33,5 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('username', 'email', 'first_name', 'last_name')
     ordering = ('username',)
 
-    def get_inline_instances(self, request, obj=None):
-        """
-        Show inline profile based on the user's role.
-        BuyerProfile for buyers, DealerProfile for dealers.
-        """
-        if not obj:
-            return []
-
-        inlines = []
-        if obj.role == 'buyer':
-            inlines.append(BuyerProfileInline(self.model, self.admin_site))
-        elif obj.role == 'dealer':
-            inlines.append(DealerProfileInline(self.model, self.admin_site))
-        return inlines
 
 
-@admin.register(BuyerProfile)
-class BuyerProfileAdmin(admin.ModelAdmin):
-    """
-    Admin panel for BuyerProfile.
-    Typically shown inline in CustomUserAdmin.
-    """
-    list_display = ('user','phone_number', 'address')
-
-    def save_model(self, request, obj, form, change):
-        obj.clean()
-        super().save_model(request, obj, form, change)
-
-
-@admin.register(DealerProfile)
-class DealerProfileAdmin(admin.ModelAdmin):
-    """
-    Admin panel for DealerProfile.
-    Typically shown inline in CustomUserAdmin.
-    """
-    list_display = ('user', 'company_name', 'tax_number', 'phone_number', 'email', 'address')
-
-    def save_model(self, request, obj, form, change):
-        obj.clean()
-        super().save_model(request, obj, form, change)
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        """
-        Filter the user dropdown so it shows only users with role='dealer'.
-        """
-        if db_field.name == 'user':
-            kwargs['queryset'] = CustomUser.objects.filter(role='dealer')
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)

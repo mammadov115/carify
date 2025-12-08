@@ -14,7 +14,7 @@ class CarModel(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='models')
 
     def __str__(self):
-        return f"{self.brand.name} {self.name}"
+        return f"{self.name}"
 
 
 class Year(models.Model):
@@ -100,7 +100,7 @@ class Car(models.Model):
     mileage = models.PositiveIntegerField(help_text="km")
 
     # Media
-    main_image = models.ImageField(upload_to='cars/')
+    main_image = models.ImageField(upload_to='cars/', null=True)
 
     # Description
     description = models.TextField(blank=True, null=True)

@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.core.exceptions import ValidationError
 
 
 class CustomUserManager(BaseUserManager):
@@ -61,61 +60,3 @@ class CustomUser(AbstractUser):
         """Check if the user is a dealer."""
         return self.role == 'dealer'
 
-
-class BuyerProfile(models.Model):
-    """
-    Profile model for buyers.
-    Stores additional information beyond the user account.
-    """
-    user = models.OneToOneField(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='buyer_profile'
-    )
-    phone_number = models.CharField(max_length=30)
-    address = models.CharField(max_length=255, blank=True, null=True)
-
-    # Wishlist and orders can be related later via ForeignKey or ManyToMany
-    wishlist = models.ManyToManyField("cars.Car", blank=True, related_name='wishlisted_by')
-
-    def clean(self):
-        if self.user.role != 'buyer':
-            raise ValidationError("User role must be 'buyer' to create a BuyerProfile.")
-
-    def save(self, *args, **kwargs):
-        self.clean()
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}"
-
-
-class DealerProfile(models.Model):
-    """
-    Profile model for dealers.
-    Stores company-specific information and statistics.
-    """
-    user = models.OneToOneField(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='dealer_profile'
-    )
-    company_name = models.CharField(max_length=100)
-    tax_number = models.CharField(max_length=50, blank=True, null=True)
-    phone_number = models.CharField(max_length=30)
-    email = models.EmailField(blank=True, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
-
-    def clean(self):
-        """
-        Ensure that only users with role 'dealer' can have a DealerProfile.
-        """
-        if self.user.role != 'dealer':
-            raise ValidationError("User role must be 'dealer' to create a DealerProfile.")
-
-    def save(self, *args, **kwargs):
-        self.clean()  # validate before saving
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.company_name

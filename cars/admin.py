@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Car, CarImage
+from .models import Car, CarImage, Brand, CarModel, Year
 from django import forms
 from django.forms.widgets import ClearableFileInput
 
@@ -25,3 +25,8 @@ class CarAdmin(admin.ModelAdmin):
     inlines = [CarImageInline]
     ordering = ("-created_at",)
     readonly_fields = ("created_at", "updated_at")
+
+
+admin.site.register(Brand)
+admin.site.register(CarModel)
+admin.site.register(Year)
