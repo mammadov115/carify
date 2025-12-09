@@ -21,10 +21,10 @@ class CarAdmin(admin.ModelAdmin):
     list_display = ("brand", "model", "year", "price", "condition")
     list_filter = ("brand", "condition", "fuel_type", "transmission", "is_negotiable")
     search_fields = ("brand", "model")
-    prepopulated_fields = {"slug": ("brand", "model", "year")}
     inlines = [CarImageInline]
     ordering = ("-created_at",)
     readonly_fields = ("created_at", "updated_at")
+    exclude = ("slug",)
 
 
 admin.site.register(Brand)

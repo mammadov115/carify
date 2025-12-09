@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from PIL import Image
 
 
 class Brand(models.Model):
@@ -45,12 +46,24 @@ class Car(models.Model):
         (SOLD_OUT, 'Satıldı'),
 
     ]
+    
 
     category = models.CharField(
         max_length=20,
         choices=CATEGORY_CHOICES,
         default=KOREA_STOCK
     )
+
+    changed_parts_count = models.PositiveIntegerField(
+        default=0,
+        help_text="Number of parts replaced on the vehicle"
+    )
+
+    painted_parts_count = models.PositiveIntegerField(
+        default=0,
+        help_text="Number of body parts that have been repainted"
+    )
+
 
     featured = models.BooleanField(
         default=False,
@@ -118,8 +131,31 @@ class Car(models.Model):
         Automatically generates slug from brand, model, and year if not provided.
         """
         if not self.slug:
-            self.slug = slugify(f"{self.brand}-{self.model}-{self.year}")
+            super().save(*args, **kwargs)
+            self.slug = slugify(f"{self.brand}-{self.model}-{self.year}-{self.pk}")
         super().save(*args, **kwargs)
+
+        # resize image
+        output_size = (1000, 750)  # fixed container size (width, height)
+        img = Image.open(self.main_image.path)
+        img = img.convert("RGB")  # prevent errors for PNG w/ alpha
+
+        # resize while keeping aspect ratio (always covers container)
+        img.thumbnail((2000, 1500))  # allow upscaling
+        ratio = max(output_size[0] / img.width, output_size[1] / img.height)
+        new_size = (int(img.width * ratio), int(img.height * ratio))
+        img = img.resize(new_size, Image.LANCZOS)
+
+        # create background canvas
+        background = Image.new("RGB", output_size, (255, 255, 255))
+
+        # center position on canvas
+        x = (output_size[0] - new_size[0]) // 2
+        y = (output_size[1] - new_size[1]) // 2
+        background.paste(img, (x, y))
+
+        # save result
+        background.save(self.main_image.path, quality=90)
 
     def __str__(self):
         return f"{self.brand} {self.model} {self.year}"

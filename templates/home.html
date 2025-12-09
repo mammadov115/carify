@@ -15,31 +15,7 @@
     <!-- Alpine.js -->
     <script src="//unpkg.com/alpinejs" defer></script>
 
-    <style>
-      .font-inter {
-        font-family: 'Inter', sans-serif;
-      }
-      
-      /* Example: Adding some basic styling for better visualization */
-      .favorite-icon {
-        color: red;
-        font-size: 1.5rem;
-      }
-      
-      .gold-icon {
-        color: gold;
-      }
-      
-      .korea-stock-icon {
-        color: #17a2b8;
-        /* Info color example */
-      }
-      
-      .on-the-way-icon {
-        color: #ffc107;
-        /* Warning color example */
-      }
-    </style>
+
   </head>
 
   <body class="font-inter">
@@ -216,7 +192,7 @@
                       >
                     </i>
 
-                    <img src="{% if car.main_image %}{{ car.main_image.url }}{% endif %}" class="card-img-top {% if car.category == "sold_out" %} grayscale{% endif %}" alt="Car Image" />
+                    <img src="{% if car.main_image %}{{ car.main_image.url }}{% endif %}" class="card-img-top object-fit-cover {% if car.category == "sold_out" %} grayscale{% endif %}" alt="Car Image" />
 
                     <div class="price-bar position-absolute bottom-0 start-0 w-100 bg-dark text-white text-center p-2 opacity-75 border-bottom border-4 border-primary fw-bold">{{ car.price|thousands_dot  }} $</div>
                   </div>
@@ -226,8 +202,28 @@
                     <h6 class="card-title text-truncate">{{ car.brand.name }} - {{ car.model.name }}</h6>
                     <p class="card-text">{{ car.year }} / {{ car.mileage }} km / Bakı</p>
                     <div class="d-flex gap-2">
-                      <span class="badge bg-primary">Tam sığorta</span>
-                      <span class="badge bg-warning text-dark">İcarə</span>
+                      <!--changed_parts_count-->
+                      {% if car.changed_parts_count == 0 %}
+                        <span class="badge rounded bg-primary-subtle text-primary">Dəyişən yox</span>
+                      {% elif car.changed_parts_count == 1 %}
+                        <span class="badge rounded bg-success-subtle text-success">Dəyişən (1)</span>
+                      {% elif car.changed_parts_count == 2 %}
+                        <span class="badge rounded bg-warning-subtle text-warning">Dəyişən (2)</span>
+                      {% else %}
+                        <span class="badge rounded bg-danger-subtle text-danger">Dəyişən (2+)</span>
+                      {% endif %}
+
+                      
+                      <!--painted_parts_count-->
+                      {% if car.painted_parts_count == 0 %}
+                        <span class="badge rounded bg-primary-subtle text-primary">Boya yox</span>
+                      {% elif car.painted_parts_count == 1 %}
+                        <span class="badge rounded bg-success-subtle text-success">Boya (1)</span>
+                      {% elif car.painted_parts_count == 2 %}
+                        <span class="badge rounded bg-warning-subtle text-warning">Boya (2)</span>
+                      {% else %}
+                        <span class="badge rounded bg-danger-subtle text-danger">Boya (2+)</span>
+                      {% endif %}
                     </div>
                   </div>
                 </div>
