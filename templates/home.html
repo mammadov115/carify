@@ -201,29 +201,31 @@
                     {% comment %} <h5 class="price">910,000₼</h5> {% endcomment %}
                     <h6 class="card-title text-truncate">{{ car.brand.name }} - {{ car.model.name }}</h6>
                     <p class="card-text">{{ car.year }} / {{ car.mileage }} km / Bakı</p>
-                    <div class="d-flex gap-2">
+                    <div class="scrolling-badge-wrapper">
                       <!--changed_parts_count-->
-                      {% if car.changed_parts_count == 0 %}
-                        <span class="badge rounded bg-primary-subtle text-primary">Dəyişən yox</span>
-                      {% elif car.changed_parts_count == 1 %}
-                        <span class="badge rounded bg-success-subtle text-success">Dəyişən (1)</span>
-                      {% elif car.changed_parts_count == 2 %}
-                        <span class="badge rounded bg-warning-subtle text-warning">Dəyişən (2)</span>
-                      {% else %}
-                        <span class="badge rounded bg-danger-subtle text-danger">Dəyişən (2+)</span>
-                      {% endif %}
+                      <div class="scrolling-badge-content">
+                        {% if car.changed_parts_count == 0 %}
+                          <span class="badge rounded bg-primary-subtle text-primary">Dəyişən yox</span>
+                        {% elif car.changed_parts_count == 1 %}
+                          <span class="badge rounded bg-success-subtle text-success">Dəyişən (1)</span>
+                        {% elif car.changed_parts_count == 2 %}
+                          <span class="badge rounded bg-warning-subtle text-warning">Dəyişən (2)</span>
+                        {% else %}
+                          <span class="badge rounded bg-danger-subtle text-danger">Dəyişən (2+)</span>
+                        {% endif %}
 
-                      
-                      <!--painted_parts_count-->
-                      {% if car.painted_parts_count == 0 %}
-                        <span class="badge rounded bg-primary-subtle text-primary">Boya yox</span>
-                      {% elif car.painted_parts_count == 1 %}
-                        <span class="badge rounded bg-success-subtle text-success">Boya (1)</span>
-                      {% elif car.painted_parts_count == 2 %}
-                        <span class="badge rounded bg-warning-subtle text-warning">Boya (2)</span>
-                      {% else %}
-                        <span class="badge rounded bg-danger-subtle text-danger">Boya (2+)</span>
-                      {% endif %}
+                        
+                        <!--painted_parts_count-->
+                        {% if car.painted_parts_count == 0 %}
+                          <span class="badge rounded bg-primary-subtle text-primary">Boya yox</span>
+                        {% elif car.painted_parts_count == 1 %}
+                          <span class="badge rounded bg-success-subtle text-success">Boya (1)</span>
+                        {% elif car.painted_parts_count == 2 %}
+                          <span class="badge rounded bg-warning-subtle text-warning">Boya (2)</span>
+                        {% else %}
+                          <span class="badge rounded bg-danger-subtle text-danger">Boya (2+)</span>
+                        {% endif %}
+                      </div>
                     </div>
                   </div>
                 </div>

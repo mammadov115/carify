@@ -203,6 +203,54 @@ input[type="range"] {
   z-index: 1;
 }
 
+/* Scrolling badges */
+
+/* scrolling-badge-wrapper və scrolling-badge-content siniflərini əvvəlcə statik vəziyyətdə təyin edirik */
+.scrolling-badge-wrapper {
+  width: 100%;
+  overflow: visible; /* Desktop-da overflow normal olsun */
+  white-space: normal; /* Desktop-da normal sətir sonu */
+}
+
+.scrolling-badge-content {
+  display: flex; /* Bootstrap-dakı d-flex kimi davranır */
+  /* Desktop-da animasiya yoxdur */
+  gap: 4px;
+  animation: none; 
+}
+
+/* --- Media Sorğusu: Yalnız Kiçik Ekranlar Üçün Dəyişikliklər --- */
+@media (max-width: 575.98px) { 
+  /* Bootstrap-ın LG breakpoint-dən kiçik bütün ekranlar (Mobile/Tablet) */
+  
+  .scrolling-badge-wrapper {
+    /* Mobil üçün: Hərəkəti göstərmək üçün kənarları gizlədir */
+    overflow: hidden; 
+    white-space: nowrap; /* Sətir pozulmasını dayandırır */
+    /* Nişanlar arasında boşluqları kəsmək üçün padding ləğv edilir */
+    padding: 0;
+  }
+
+  .scrolling-badge-content {
+    /* Hərəkət edən elementin xüsusiyyətləri */
+    display: inline-block; /* Hərəkət üçün flex-dən inline-block-a dəyişirik */
+    
+    /* Mobil üçün: Animasiyanı tətbiq edirik */
+    animation: marquee-scroll 10s linear infinite;
+  }
+
+  /* Animasiyanın özü (Sağdan sola hərəkət) */
+  @keyframes marquee-scroll {
+    0% {
+      transform: translateX(0); 
+    }
+    100% {
+      transform: translateX(-50%); 
+    }
+  }
+}
+
+
 /* Responive design */
 .card-text {
   font-size: 13px;
