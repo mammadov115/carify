@@ -194,7 +194,7 @@
 
                     <img src="{% if car.main_image %}{{ car.main_image.url }}{% endif %}" class="card-img-top object-fit-cover {% if car.category == "sold_out" %} grayscale{% endif %}" alt="Car Image" />
 
-                    <div class="price-bar position-absolute bottom-0 start-0 w-100 bg-dark text-white text-center p-2 opacity-75 border-bottom border-4 border-primary fw-bold">{{ car.price|thousands_dot  }} $</div>
+                    <div class="price-bar position-absolute bottom-0 start-0 w-100 bg-dark text-white text-center py-1 px-2 opacity-75 border-bottom border-4 border-primary fw-bold">{{ car.price|thousands_dot  }} $</div>
                   </div>
 
                   <div class="card-body">
