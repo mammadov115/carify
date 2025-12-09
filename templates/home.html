@@ -1,3 +1,4 @@
+{% load number_format %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -119,6 +120,14 @@
                   Yolda satılır
                 </label>
               </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="radio" value="sold_out" name="category" id="soldOutCheck" {% if selected_category == 'sold_out' %}checked{% endif %}/>
+                <label class="form-check-label" for="onTheWayCheck">
+                  <i class="bi bi-check-lg sold-out-icon"></i>
+                  Satıldı
+                </label>
+              </div>
             </div>
 
             <div class="bg-white shadow p-3 mt-2 mb-3" x-data="carFilter({{ selected_brand|default:'null' }}, {{ selected_model|default:'null' }})">
@@ -133,19 +142,36 @@
                 <option value="" selected>Model seçin...</option>
                 <template x-for="model in models" :key="model.id">
                   <option :value="model.id" x-text="model.name" :selected="model.id == selected_model"></option>
-                </template>
+                </template> 
               </select>
             </div>
 
-
-            <div class="bg-white shadow p-3 mt-2 mb-2">
-              <select name="year" class="form-select" aria-label="Select Model">
+            <!-- Select Year-->
+            {% comment %} <div class="bg-white shadow p-3 mt-2 mb-2">
+              <select name="year" class="form-select" aria-label="Select Year">
                 <option value="" selected>İl seçin...</option>
                 {% for year in years %}
                   <option value="{{ year.id }}" {% if selected_year == year.id %}selected{% endif %}>{{ year.year }}</option>
                 {% endfor %}
               </select>
+
+            </div>  {% endcomment %}
+
+            <!-- Select Year Range (2016-2020) -->
+            <div class="bg-white shadow p-3 mt-2 mb-2">
+              <label class="form-label">İl aralığı seçin:</label>
+              <div class="range_container ">
+                  <div class="sliders_control">
+                    <div class="mb-4 text-center">
+                      <span id="fromYear" >{{ selected_from_year }}</span> - <span id="toYear" >{{ selected_to_year }}</span>
+                    </div>
+
+                    <input id="fromSlider" type="range" value="{{ selected_from_year }}" min="{{ min_year }}" max="{{ max_year }}"  name="from_year"/>
+                    <input id="toSlider" type="range" value="{{ selected_to_year }}" min="{{ min_year }}" max="{{ max_year }}"  name="to_year"/>
+                  </div>
+              </div>
             </div>
+
 
             <input class="btn btn-primary w-100 mb-4" type="submit" value="Axtar" />
           </form>
@@ -170,34 +196,29 @@
               <div class="col-6 col-lg-3 mb-2">
                 <div class="card car-card position-relative">
                   <div class="image-container position-relative">
-                    {% if car.condition == 'new' %}
-                      <span class="badge bg-success position-absolute top-0 start-0 m-2">Yeni</span>
-                    {% else %}
-                      <span class="badge bg-warning position-absolute top-0 start-0 m-2">Işlənmiş</span>
+                    {% if car.category == 'auction' %}
+                      <span class="badge bg-primary position-absolute top-0 start-0 m-2 car-badge">Hərrac</span>
+                    {% elif car.category == 'korea_stock' %}
+                      <span class="badge bg-danger position-absolute top-0 start-0 m-2 car-badge" >Stok</span>
+                    {% elif car.category == 'on_the_way' %}
+                      <span class="badge bg-success position-absolute top-0 start-0 m-2 car-badge">Yolda</span>
+                    {% elif car.category == 'sold_out' %}
+                      <span class="badge bg-warning position-absolute top-0 start-0 m-2 car-badge">Satıldı</span>
                     {% endif %}
-                    <i class="bi {% if car.id|stringformat:'s' in request.session.favorites %}
-                        
-                        
-                        
+                    <i class="bi 
+                      {% if car.id|stringformat:'s' in request.session.favorites %}
                         bi-heart-fill
-
-
-
-                      {% else %}
-                        
-                        
-                        
+                      {% else %}                        
                         bi-heart
-
-
-
-                      {% endif %} position-absolute top-0 end-0 m-2 favorite-icon"
-                      data-car-id="{{ car.id }}">
-
+                      {% endif %} 
+                      position-absolute top-0 end-0 m-2 favorite-icon"
+                      data-car-id="{{ car.id }}"
+                      >
                     </i>
-                    <img src="{% if car.main_image %}{{ car.main_image.url }}{% endif %}" class="card-img-top" alt="Car Image" />
 
-                    <div class="price-bar position-absolute bottom-0 start-0 w-100 bg-dark text-white text-center p-2 opacity-75 border-bottom border-4 border-primary">{{ car.price|floatformat:0 }} $</div>
+                    <img src="{% if car.main_image %}{{ car.main_image.url }}{% endif %}" class="card-img-top {% if car.category == "sold_out" %} grayscale{% endif %}" alt="Car Image" />
+
+                    <div class="price-bar position-absolute bottom-0 start-0 w-100 bg-dark text-white text-center p-2 opacity-75 border-bottom border-4 border-primary fw-bold">{{ car.price|thousands_dot  }} $</div>
                   </div>
 
                   <div class="card-body">
@@ -286,6 +307,7 @@
       </div>
     </div>
 
+    <script src="/static/year-range.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
   </body>

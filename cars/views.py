@@ -4,7 +4,8 @@ from cars.models import Car, Brand, CarModel, Year
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db.models import Case, When
-from django.db.models import Q
+from django.db.models import Q, Min, Max
+
 # Create your views here.
 
 
@@ -25,7 +26,8 @@ class HomeView(ListView):
         category = self.request.GET.get("category")
         brand_id = self.request.GET.get("brand")
         model_id = self.request.GET.get("model")
-        year_id = self.request.GET.get("year")
+        from_year = self.request.GET.get("from_year")  # from slider value
+        to_year = self.request.GET.get("to_year")      # to slider value
 
         filters = Q()
         if category:
@@ -34,8 +36,11 @@ class HomeView(ListView):
             filters &= Q(brand_id=brand_id)
         if model_id:
             filters &= Q(model_id=model_id)
-        if year_id:
-            filters &= Q(year_id=year_id)
+        # Filter by year range from sliders
+        if from_year:
+            filters &= Q(year__year__gte=int(from_year))  # greater or equal to from_year
+        if to_year:
+            filters &= Q(year__year__lte=int(to_year))    # less or equal to to_year
 
         return qs.filter(filters)
 
@@ -43,13 +48,19 @@ class HomeView(ListView):
         context = super().get_context_data(**kwargs)
         context['brands'] = Brand.objects.all()
         context['car_models'] = CarModel.objects.all()
-        context['years'] = Year.objects.all()
+
+        # Adding min and max date
+        year_stats = Year.objects.aggregate(min_year=Min('year'), max_year=Max('year'))
+        context['min_year'] = year_stats['min_year']
+        context['max_year'] = year_stats['max_year']
 
         # Track selected filters for template
         context['selected_category'] = self.request.GET.get("category", "")
         context['selected_brand'] = int(self.request.GET.get("brand")) if self.request.GET.get("brand") else None
         context['selected_model'] = int(self.request.GET.get("model")) if self.request.GET.get("model") else None
-        context['selected_year'] = int(self.request.GET.get("year")) if self.request.GET.get("year") else None
+        # Track selected slider values for template
+        context['selected_from_year'] = int(self.request.GET.get("from_year")) if self.request.GET.get("from_year") else context['min_year']
+        context['selected_to_year'] = int(self.request.GET.get("to_year")) if self.request.GET.get("to_year") else context['max_year']
 
         return context
 

@@ -35,11 +35,15 @@ class Car(models.Model):
     AUCTION = 'auction'
     KOREA_STOCK = 'korea_stock'
     ON_THE_WAY = 'on_the_way'
+    SOLD_OUT = 'sold_out'
+
 
     CATEGORY_CHOICES = [
         (AUCTION, 'Hərrac maşınları'),
         (KOREA_STOCK, 'Koreya stokumuz'),
         (ON_THE_WAY, 'Yolda satılır'),
+        (SOLD_OUT, 'Satıldı'),
+
     ]
 
     category = models.CharField(
@@ -49,8 +53,8 @@ class Car(models.Model):
     )
 
     featured = models.BooleanField(
-    default=False,
-    help_text="Check to feature this car on the homepage."
+        default=False,
+        help_text="Check to feature this car on the homepage."
     )
     
 

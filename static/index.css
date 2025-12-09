@@ -35,6 +35,18 @@
   /* bəzi brauzerlərdə lazım ola bilər */
 }
 
+
+.sold-out-icon {
+  display: inline-block;
+  font-size: 1.2rem;
+  /* icon ölçüsü */
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* bəzi brauzerlərdə lazım ola bilər */
+}
+
 .favorites-card {
   background: linear-gradient(135deg, #1E3A8A, #3B82F6);
   /* elegant blue gradient */
@@ -88,14 +100,110 @@
   color: #FF4757;
   cursor: pointer;
   transition: transform 0.2s;
+  z-index: 10;
 }
 
 .favorite-icon:hover {
   transform: scale(1.2);
 }
 
+.car-badge {
+  z-index: 10;
+}
+
+.grayscale {
+    filter: grayscale(100%);
+    /* transition: filter 0.3s ease smooth transition */
+}
+
+.card:hover .grayscale {
+    filter: grayscale(0%);
+}
 
 
+
+/* Year Range */
+/* This line can be removed it was just for display on CodePen: */
+.range_container {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: 20px auto;
+}
+
+.sliders_control {
+  position: relative;
+  min-height: 50px;
+}
+
+.form_control {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  font-size: 24px;
+  color: #635a5a;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  pointer-events: all;
+  width: 24px;
+  height: 24px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #C6C6C6;
+  cursor: pointer;
+}
+
+input[type=range]::-moz-range-thumb {
+  -webkit-appearance: none;
+  pointer-events: all;
+  width: 24px;
+  height: 24px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #C6C6C6;
+  cursor: pointer;  
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+  background: #f7f7f7;
+}
+
+input[type=range]::-webkit-slider-thumb:active {
+  box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+  -webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+}
+
+input[type="number"] {
+  color: #8a8383;
+  width: 50px;
+  height: 30px;
+  font-size: 20px;
+  border: none;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {  
+   opacity: 1;
+}
+
+input[type="range"] {
+  -webkit-appearance: none; 
+  appearance: none;
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  background-color: #C6C6C6;
+  pointer-events: none;
+}
+
+#fromSlider {
+  height: 0;
+  z-index: 1;
+}
+
+/* Responive design */
 .card-text {
   font-size: 13px;
 }
