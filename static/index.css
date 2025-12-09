@@ -215,6 +215,7 @@ input[type="range"] {
 .scrolling-badge-content {
   display: flex; /* Bootstrap-dakı d-flex kimi davranır */
   /* Desktop-da animasiya yoxdur */
+  flex-wrap: nowrap;
   gap: 4px;
   animation: none; 
 }
@@ -234,17 +235,27 @@ input[type="range"] {
   .scrolling-badge-content {
     /* Hərəkət edən elementin xüsusiyyətləri */
     display: inline-block; /* Hərəkət üçün flex-dən inline-block-a dəyişirik */
+    gap: 0;
     
     /* Mobil üçün: Animasiyanı tətbiq edirik */
-    animation: marquee-scroll 10s linear infinite;
+    animation: marquee-scroll 15s linear infinite;
   }
 
+  .scrolling-badge-content .badge {
+      /* Nişanlar arasındakı 2px məsafəni təmin edir */
+      margin-right: 2px;
+    }
+
   /* Animasiyanın özü (Sağdan sola hərəkət) */
-  @keyframes marquee-scroll {
+@keyframes marquee-scroll {
     0% {
+      /* Başlanğıc: Mətn sağ kənardan (görünməyən yerdən) başlasın */
+      /* scrolling-badge-wrapper-in öz eni qədər sağa sürüşdürürük. */
       transform: translateX(0); 
     }
     100% {
+      /* Bitmə: Mətn tamamilə sol kənardan çıxır. */
+      /* Elementin öz eni qədər sola sürüşdürürük. */
       transform: translateX(-50%); 
     }
   }
@@ -262,6 +273,10 @@ input[type="range"] {
 
 .price-bar {
   font-size: 12px;
+}
+
+.parts-status {
+  font-size: 12.6px;
 }
 
 @media (min-width: 768px) {
