@@ -195,6 +195,8 @@
         <div class="row g-4">
             
             {% with embed_url=car.promotion_video_url|replace %}
+                <p>Orijinal URL: <strong>{{ car.promotion_video_url }}</strong></p>
+                <p>Embed URL: <strong>{{ embed_url }}</strong></p>
                 {% if embed_url %}
                     <div class="col-lg-6">
                         <h4 class="mb-3">Avtomobilin Təqdimatı</h4>
@@ -225,6 +227,7 @@
                     </div>
                 {% endif %}
             {% endwith %}
+
             
         </div>
     </div>
