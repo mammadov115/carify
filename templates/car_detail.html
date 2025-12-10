@@ -203,6 +203,7 @@
                                 src="{{ embed_url }}" 
                                 title="YouTube video player" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                referrerpolicy="strict-origin-when-cross-origin"
                                 allowfullscreen
                             ></iframe>
                         </div>
@@ -219,16 +220,13 @@
                                 src="{{ embed_url }}" 
                                 title="YouTube video player" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                referrerpolicy="strict-origin-when-cross-origin"
                                 allowfullscreen
                             ></iframe>
                         </div>
                     </div>
                 {% endif %}
             {% endwith %}
-
-            <div class="ratio ratio-16x9">
-              <iframe src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" title="YouTube video" allowfullscreen></iframe>
-            </div>
             
         </div>
     </div>
