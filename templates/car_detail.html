@@ -152,7 +152,7 @@
                                         {{ car.painted_parts_count }}
                                     </span>
                                 </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {% comment %} <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <span class="fw-medium">Seçilmiş Avtomobil:</span>
                                     <span>
                                         {% if car.featured %}
@@ -161,14 +161,14 @@
                                             <i class="bi bi-x-circle-fill text-muted fs-5"></i>
                                         {% endif %}
                                     </span>
-                                </li>
+                                </li> {% endcomment %}
                             </ul>
                         </div>
                     </div>
 
                     <div class="card bg-info bg-opacity-10 border-info border-2 border-start shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title text-primary fw-bold">Qiymət Xülasəsi</h5>
+                            <h5 class="card-title text-primary fw-bold">Qiymət</h5>
                             <p class="card-text fs-3 fw-bolder text-dark mb-0">
                                 ${{ car.price|thousands_dot }}
                             </p>
@@ -178,7 +178,7 @@
                                 </small>
                             {% else %}
                                 <small class="text-danger fw-medium">
-                                    Qiymət Qəti
+                                    Son Qiymət
                                 </small>
                             {% endif %}
                         </div>
@@ -191,7 +191,9 @@
 
     <!--Youtube video-->
     <div class="container py-4">
-        <h2 class="mb-4 text-primary fw-bold">Multimedia</h2>
+        {% if embed_url %}
+          <h2 class="mb-4 text-primary fw-bold">Multimedia</h2>
+        {% endif %}
         <div class="row g-4">
             
             {% with embed_url=car.promotion_video_url|replace %}
