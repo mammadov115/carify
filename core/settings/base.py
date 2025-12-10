@@ -51,10 +51,7 @@ APPS = [
 
 THIRD_PARTY_APPS = [
     'image_uploader_widget',
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
-    'drf_yasg',
+
 ]
 
 INSTALLED_APPS += APPS + THIRD_PARTY_APPS
