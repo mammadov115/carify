@@ -81,18 +81,18 @@ class Car(models.Model):
     fuel_type = models.CharField(
         max_length=20,
         choices=[
-            ('petrol', 'Petrol'),
-            ('diesel', 'Diesel'),
-            ('hybrid', 'Hybrid'),
-            ('electric', 'Electric')
+            ('petrol', 'Benzin'),
+            ('diesel', 'Dizel'),
+            ('hybrid', 'Hibrid'),
+            ('electric', 'Elektrik')
         ]
     )
 
     transmission = models.CharField(
         max_length=20,
         choices=[
-            ('automatic', 'Automatic'),
-            ('manual', 'Manual')
+            ('automatic', 'Avtomatik'),
+            ('manual', 'Mexanika')
         ]
     )
 
@@ -121,6 +121,20 @@ class Car(models.Model):
 
     # Description
     description = models.TextField(blank=True, null=True)
+
+    # New fields: To store video links
+    promotion_video_url = models.CharField(
+        max_length=200, 
+        blank=True, 
+        null=True, 
+        help_text="YouTube Link for the car's Promotional Video"
+    )
+    paint_test_video_url = models.CharField(
+        max_length=200, 
+        blank=True, 
+        null=True, 
+        help_text="YouTube Link for the car's Paint Test Video"
+    )
 
     # Metadata
     created_at = models.DateTimeField(auto_now_add=True)
@@ -173,6 +187,33 @@ class CarImage(models.Model):
     )
     image = models.ImageField(upload_to='cars/gallery/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+
+        super().save(*args, **kwargs)
+
+        # resize image
+        output_size = (1000, 750)  # fixed container size (width, height)
+        img = Image.open(self.image.path)
+        img = img.convert("RGB")  # prevent errors for PNG w/ alpha
+
+        # resize while keeping aspect ratio (always covers container)
+        img.thumbnail((2000, 1500))  # allow upscaling
+        ratio = max(output_size[0] / img.width, output_size[1] / img.height)
+        new_size = (int(img.width * ratio), int(img.height * ratio))
+        img = img.resize(new_size, Image.LANCZOS)
+
+        # create background canvas
+        background = Image.new("RGB", output_size, (255, 255, 255))
+
+        # center position on canvas
+        x = (output_size[0] - new_size[0]) // 2
+        y = (output_size[1] - new_size[1]) // 2
+        background.paste(img, (x, y))
+
+        # save result
+        background.save(self.image.path, quality=90)
+
 
     def __str__(self):
         return f"Image for {self.car}"

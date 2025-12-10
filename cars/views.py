@@ -115,6 +115,29 @@ class CarDetailView(DetailView):
         Example: features, recommended cars, etc.
         """
         context = super().get_context_data(**kwargs)
+
+        # Get the current Car object fetched by DetailView
+        car_object = self.object 
+        
+        # ----------------------------------------------------------------------
+        # Retrieve the 17th image object (index 16) from the images queryset
+        # ----------------------------------------------------------------------
+        
+        try:
+            # Queryset slicing: car_object.images.all()[16] directly fetches the 17th item.
+            # Using slicing on a QuerySet is efficient as Django handles the limit in SQL.
+            seventeenth_image = car_object.images.all()[16] 
+        except IndexError:
+            # Handle the case where the car has less than 17 images.
+            # Set it to None or the last available image if needed.
+            seventeenth_image = None
+        except AttributeError:
+            # Handle if the 'images' attribute doesn't exist or is invalid.
+            seventeenth_image = None
+
+        # Add the retrieved object to the context
+        context["seventeenth_image"] = seventeenth_image
+        
         # context["related_cars"] = Car.objects.filter(featured=True)[:4]
         return context
 

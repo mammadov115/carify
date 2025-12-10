@@ -185,6 +185,27 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-image-uploader-widget"
+version = "1.1.0"
+description = "Simple Image Uploader Widget for Django-Admin"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "django_image_uploader_widget-1.1.0-py3-none-any.whl", hash = "sha256:d428cc4bad845421f32198c168b285f8d18b2d10964c5e8fcd16931b7bd73c69"},
+    {file = "django_image_uploader_widget-1.1.0.tar.gz", hash = "sha256:f58c14f07a5d8c089283262aa0281d2efdc3b1fdae27f3e889ee8e6a68bd9613"},
+]
+
+[package.dependencies]
+django = ">=4.2"
+Pillow = "*"
+
+[package.extras]
+dev = ["black", "isort", "poethepoet", "pre-commit"]
+docs = ["mkdocs", "mkdocs-awesome-pages-plugin", "mkdocs-glightbox", "mkdocs-material"]
+test = ["playwright (==1.48.0)"]
+
+[[package]]
 name = "djangorestframework"
 version = "3.16.0"
 description = "Web APIs for Django, made easy."
@@ -422,6 +443,18 @@ mic = ["olefile"]
 test-arrow = ["arro3-compute", "arro3-core", "nanoarrow", "pyarrow"]
 tests = ["check-manifest", "coverage (>=7.4.2)", "defusedxml", "markdown2", "olefile", "packaging", "pyroma (>=5)", "pytest", "pytest-cov", "pytest-timeout", "pytest-xdist", "trove-classifiers (>=2024.10.12)"]
 xmp = ["defusedxml"]
+
+[[package]]
+name = "pip"
+version = "25.3"
+description = "The PyPA recommended tool for installing Python packages."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "pip-25.3-py3-none-any.whl", hash = "sha256:9655943313a94722b7774661c21049070f6bbb0a1516bf02f7c8d5d9201514cd"},
+    {file = "pip-25.3.tar.gz", hash = "sha256:8d0538dbbd7babbd207f261ed969c65de439f6bc9e5dbd3b3b9a77f25d95f343"},
+]
 
 [[package]]
 name = "pluggy"
@@ -803,4 +836,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "26f659608b08d6f106cfb0afe0d382434762722b57becb1ffebfbdf168fe1a0b"
+content-hash = "caf2101749d20cb06b04ae247a69fde64728f08c3019f78b727c9c944caf79d0"

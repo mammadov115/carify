@@ -1,6 +1,6 @@
 <style>
   .plus-more-overlay  {
-    background-image: url('{{ car.main_image.url }}'); 
+    background-image: url('{{ seventeenth_image.image.url }}'); 
 
   }
 
@@ -24,23 +24,22 @@
         <div class="col">
             <img src="{{ car.main_image.url }}" class="img-fluid rounded thumbnail-img active" alt="Car Thumbnail 0" data-full-src="{{ car.main_image.url }}" data-slide-to="0" />
           </div>
-        {% for image_object in car.images.all %}
-          {% if forloop.counter0 < 16 %}
-            <div class="col">
-              <img src="{{ image_object.image.url }}" class="img-fluid rounded thumbnail-img " alt="Car Thumbnail {{ forloop.counter }}" data-full-src="{{ image_object.image.url }}" data-slide-to="{{ forloop.counter }}" />
-            </div>
-          {% endif %}
-        {% endfor %}
-        <div class="col">
-          <div class="plus-more-overlay rounded d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#imageModal" style="cursor: pointer;">
+            {% for image_object in car.images.all %}
+              {% if forloop.counter0 < 16 %}
+                <div class="col">
+                  <img src="{{ image_object.image.url }}" class="img-fluid rounded thumbnail-img " alt="Car Thumbnail {{ forloop.counter }}" data-full-src="{{ image_object.image.url }}" data-slide-to="{{ forloop.counter }}" />
+                </div>
+              {% endif %}
+            {% endfor %}
+
             {% with total_images=car.images.all|length %}
               {% with remaining_images=total_images|add:"-16" %}
-                  {% if remaining_images > 0 %}
-                      <span class="h4 text-white m-0">+{{ remaining_images }}</span>
-                  {% else %}
-                      <span class="h4 text-white m-0">View All</span>
+                  {% if remaining_images > 0 %}        
+                    <div class="col">
+                      <div class="plus-more-overlay rounded d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#imageModal" style="cursor: pointer;">
+                        <span class="h4 text-white m-0">+{{ remaining_images }}</span>
                   {% endif %}
-              {% endwith %}
+                {% endwith %}
             {% endwith %}
           </div>
         </div>
@@ -154,28 +153,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // C. Sync Modal Carousel on Open
     // -------------------------------------------------------------------
 
-    // When the modal is about to be shown (e.g., main image or '+22' clicked)
+    // When the modal is about to be shown (e.g., main image, thumbnail, or '+N' clicked)
     imageModal.addEventListener('show.bs.modal', function (event) {
+        const relatedTarget = event.relatedTarget;
         let activeIndex = 0;
         
-        // Check which thumbnail is currently active to set the starting slide
-        const activeThumbnail = document.querySelector('.thumbnail-img.active');
-        if (activeThumbnail) {
-            // Get the index from the thumbnail's data attribute
-            activeIndex = parseInt(activeThumbnail.getAttribute('data-slide-to'));
-            console.log(activeIndex)
-
+        // Check if the element that triggered the modal is the '+N' overlay
+        if (relatedTarget && relatedTarget.classList.contains('plus-more-overlay')) {
+            // SCENARIO 1: '+N' Overlay was clicked.
+            // We want to start the carousel from the 17th image (index 16).
+            // The first 16 images (index 0 to 15) are displayed as thumbnails.
+            activeIndex = 17;
+            
+        } 
+        // Check if the element that triggered the modal is the main image or a regular thumbnail
+        else {
+            // SCENARIO 2: Main Image or Regular Thumbnail was clicked.
+            
+            // Find the thumbnail that currently has the 'active' class (blue border).
+            const activeThumbnail = document.querySelector('.thumbnail-img.active');
+            
+            if (activeThumbnail) {
+                // Use the index from the currently active thumbnail's data-slide-to attribute
+                activeIndex = parseInt(activeThumbnail.getAttribute('data-slide-to'));
+            } else {
+                // Fallback: Default to the first image (index 0) if no active thumbnail is found.
+                activeIndex = 0;
+            }
         }
         
-        // Move the carousel to the correct slide
-        // The Bootstrap Carousel API's 'to' method is used here
+        // Move the carousel to the correct slide (16 for '+N', or the active thumbnail index otherwise)
+        // We check for >= 0 to ensure proper index passing.
         if (activeIndex >= 0) {
             modalCarousel.to(activeIndex);
-        } else {
-             // Ensure it resets to the first slide if the main image was clicked directly 
-             // and no thumbnail had been selected yet (i.e., index 0)
-             modalCarousel.to(-1);
-        }
+        } 
     });
     
 });

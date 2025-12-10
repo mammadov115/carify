@@ -1,15 +1,14 @@
 from django.contrib import admin
 from .models import Car, CarImage, Brand, CarModel, Year
-from django import forms
-from django.forms.widgets import ClearableFileInput
+from image_uploader_widget.admin import ImageUploaderInline
 
 
-class CarImageInline(admin.TabularInline):
+class CarImageInline(ImageUploaderInline):
     """
     Inline editor for additional car images.
     """
     model = CarImage
-    extra = 1
+    extra = 0
 
 
 @admin.register(Car)    

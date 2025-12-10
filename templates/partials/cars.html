@@ -3,33 +3,33 @@
 
 {% for car in cars %}
   <div class="col-6 col-lg-3 mb-2">
-    <a href="{% url 'car_detail' car.slug %}" class="text-decoration-none text-reset">
-      <div class="card car-card position-relative">
-        <div class="image-container position-relative">
-          {% if car.category == 'auction' %}
-            <span class="badge bg-primary position-absolute top-0 start-0 m-2 car-badge">Hərrac</span>
-          {% elif car.category == 'korea_stock' %}
-            <span class="badge bg-danger position-absolute top-0 start-0 m-2 car-badge">Stok</span>
-          {% elif car.category == 'on_the_way' %}
-            <span class="badge bg-success position-absolute top-0 start-0 m-2 car-badge">Yolda</span>
-          {% elif car.category == 'sold_out' %}
-            <span class="badge bg-warning position-absolute top-0 start-0 m-2 car-badge">Satıldı</span>
-          {% endif %}
-          <i class="bi 
-                    {% if car.id|stringformat:'s' in request.session.favorites %}
-                      bi-heart-fill
-                    {% else %}                                     
-                      bi-heart
-                    {% endif %} 
-                    position-absolute top-0 end-0 m-2 favorite-icon"
-                    data-car-id="{{ car.id }}">
-          </i>
+    <div class="card car-card position-relative">
+      <div class="image-container position-relative">
+        {% if car.category == 'auction' %}
+          <span class="badge bg-primary position-absolute top-0 start-0 m-2 car-badge">Hərrac</span>
+        {% elif car.category == 'korea_stock' %}
+          <span class="badge bg-danger position-absolute top-0 start-0 m-2 car-badge">Stok</span>
+        {% elif car.category == 'on_the_way' %}
+          <span class="badge bg-success position-absolute top-0 start-0 m-2 car-badge">Yolda</span>
+        {% elif car.category == 'sold_out' %}
+          <span class="badge bg-warning position-absolute top-0 start-0 m-2 car-badge">Satıldı</span>
+        {% endif %}
+        <i class="bi 
+                  {% if car.id|stringformat:'s' in request.session.favorites %}
+                    bi-heart-fill
+                  {% else %}                                     
+                    bi-heart
+                  {% endif %} 
+                  position-absolute top-0 end-0 m-2 favorite-icon"
+                  data-car-id="{{ car.id }}">
+        </i>
 
+        <a href="{% url 'car_detail' car.slug %}" class="text-decoration-none text-reset">
           <img src="{% if car.main_image %}{{ car.main_image.url }}{% endif %}" class="card-img-top object-fit-cover {% if car.category == 'sold_out' %} grayscale{% endif %}" alt="Car Image" />
-
           <div class="price-bar position-absolute bottom-0 start-0 w-100 bg-dark text-white text-center py-1 px-2 opacity-75 border-bottom border-4 border-primary fw-bold">{{ car.price|thousands_dot }} $</div>
-        </div>
-
+        </a>
+      </div>
+      <a href="{% url 'car_detail' car.slug %}" class="text-decoration-none text-reset">
         <div class="card-body">
           {% comment %} <h5 class="price">910,000₼</h5> {% endcomment %}
           <h6 class="card-title text-truncate">{{ car.brand.name }} - {{ car.model.name }}</h6>
@@ -58,7 +58,7 @@
             {% endif %}
           </div>
         </div>
-      </div>
-    </a>
+      </a>
+    </div>
   </div>
 {% endfor %}
