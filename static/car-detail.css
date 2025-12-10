@@ -1,0 +1,161 @@
+/* Custom styles for the car gallery layout */
+.car-gallery {
+    /* Ensures the row starts at a defined point */
+    margin-bottom: 20px;
+}
+
+/* Style for the main image container to position the overlay */
+.main-image-container {
+    position: relative;
+    overflow: hidden; /* Ensures image overlay stays within bounds */
+    cursor: pointer; /* Indicates it's clickable (opens modal) */
+    /* Use padding-bottom to maintain an aspect ratio (e.g., 4:3) 
+       If your image is wide, use a smaller percentage (e.g., 66.66% for 3:2 or 56.25% for 16:9). 
+       Try 75% for a standard 4:3 photo ratio. */
+    padding-bottom: 75%; /* Adjust this percentage based on your desired look */
+    height: 0; /* Necessary for padding-bottom trick to work */
+}
+
+/* 2. Ensure the main image fills the container */
+#mainImage {
+    position: absolute; /* Place inside the padded container */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Important for filling the space */
+}
+
+
+/* Style for the overlay text (like Forte and the plate number) */
+.image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* Adding a subtle gradient background for better text visibility (optional) */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+    color: white;
+    padding: 15px;
+    font-weight: bold;
+}
+
+.car-model {
+    font-size: 1.25rem;
+    display: block; /* Stacks text */
+}
+
+.plate-number {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Thumbnail Grid Styles */
+.thumbnail-grid {
+/* Adjust grid gap if needed, 'g-2' is a Bootstrap class for gap */
+/* This targets the grid container. By default, Bootstrap adds negative margins 
+       to 'row' and padding to 'col' elements to create the gutter effect. 
+       If you use g-0, you might not need this.
+*/
+    
+    /* Example: If you want a 5px gap regardless of Bootstrap size */
+    --bs-gutter-x: 0.5px; /* Sets horizontal gap */
+    --bs-gutter-y: 0.5px; /* Sets vertical gap */
+}
+
+/* If you want to reduce the space between the main image (col-md-8) 
+   and the thumbnail grid (col-md-4), you need to adjust the parent row's gap: */
+.car-gallery {
+    /* Targets the main row containing the 8-column and 4-column blocks */
+    --bs-gutter-x: 5px; /* Reducing the gap between the left and right panels */
+}
+
+/* Individual thumbnail images */
+.thumbnail-img {
+    height: 100%; /* Ensures consistent height within the grid col */
+    width: 100%;
+    object-fit: cover; /* Ensures images cover the area without distortion */
+    cursor: pointer;
+    border: 3px solid transparent; /* Default border */
+    transition: border-color 0.2s; /* Smooth transition for hover/active */
+}
+
+/* Active thumbnail visual indicator */
+.thumbnail-img.active {
+    border-color: #0d6efd; /* Bootstrap primary color for active state */
+}
+
+/* Hover effect on thumbnails */
+.thumbnail-img:hover {
+    opacity: 0.8;
+}
+
+/* Style for the "+22" overlay to look like a thumbnail */
+.plus-more-overlay {
+    /* 1. Remove the solid dark background color */
+    background-color: transparent;
+
+    /* 3. Ensure the image fits/covers the container */
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+
+    height: 100%; 
+    min-height: 80px; /* Ensure it has a visible height */
+    text-align: center;
+
+    /* 4. Add an overlay layer for better text visibility */
+    position: relative; /* Essential for positioning the overlay layer */
+    overflow: hidden; /* Keeps the overlay contained within the rounded corners */
+    
+    line-height: 80px; /* Vertically center the text (if not using flex) */
+    opacity: 0.9;
+}
+
+/* Pseudo-element for the dark overlay layer (e.g., to make the '+22' text legible) */
+.plus-more-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Set a semi-transparent black overlay */
+    background-color: rgba(0, 0, 0, 0.6); 
+    transition: background-color 0.2s;
+}
+
+/* Optional: Hover effect */
+.plus-more-overlay:hover::after {
+    /* Less dark on hover */
+    background-color: rgba(0, 0, 0, 0.4); 
+}
+
+/* Ensure the '+22' text is always on top of the overlay layer */
+.plus-more-overlay span {
+    position: relative;
+    z-index: 2; /* Place text above the '::after' pseudo-element (which has z-index 1 implicitly) */
+}
+
+
+
+
+/* Modal specific styles */
+/* Ensure the modal carousel takes up the available space and has appropriate background */
+.modal-content {
+    /* Black background as seen in standard image viewers */
+    background-color: #000; 
+}
+.modal-body {
+    /* Remove padding inside the modal body */
+    padding: 0 !important;
+}
+
+/* Hide the main image when the modal is open (optional, for cleaner transition) */
+.modal-open #mainImage {
+    opacity: 0.9; 
+}
+
+
+
+

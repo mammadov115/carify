@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db.models import Case, When
 from django.db.models import Q, Min, Max
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -91,37 +92,31 @@ def car_models_by_brand(request, brand_id):
     return JsonResponse(list(models), safe=False)
 
 
-# class CarDetailView(DetailView):
-#     """
-#     Displays detailed information for a single car, including its
-#     images, features, pricing, condition, and customer reviews.
-#     """
-#     model = Car
-#     template_name = "car_detail.html"
-#     context_object_name = "car"
-#     slug_field = "slug"
-#     slug_url_kwarg = "slug"
+class CarDetailView(DetailView):
+    """
+    Displays a detailed page for a single car listing.
+    Fetches the car object by its slug for SEO-friendly URLs.
+    """
+    model = Car
+    template_name = "car_detail.html"  # Update to your template path
+    context_object_name = "car"  # Optional: easier access in template
 
-#     def get_queryset(self):
-#         """
-#         Optionally filter queryset to include only active or available cars.
-#         Modify as needed for business logic.
-#         """
-#         return Car.objects.all().prefetch_related(
-#             'features',   # Fetch features to avoid extra queries
-#             'images',     # Fetch related images efficiently
-#             'reviews'     # Fetch reviews for display
-#         )
+    def get_object(self, queryset=None):
+        """
+        Override the default lookup to fetch the car by slug.
+        Ensures a 404 page instead of crashing if slug is invalid.
+        """
+        slug = self.kwargs.get("slug")
+        return get_object_or_404(Car, slug=slug)
 
-#     def get_context_data(self, **kwargs):
-#         """
-#         Adds extra context data for the template.
-#         """
-#         context = super().get_context_data(**kwargs)
-#         context['feature_list'] = self.object.features.all()
-#         context['image_list'] = self.object.images.all()
-#         context['reviews'] = self.object.reviews.all()
-#         return context
+    def get_context_data(self, **kwargs):
+        """
+        Add any extra data you want to show in the template.
+        Example: features, recommended cars, etc.
+        """
+        context = super().get_context_data(**kwargs)
+        # context["related_cars"] = Car.objects.filter(featured=True)[:4]
+        return context
 
 
 class FavoritesView(ListView):

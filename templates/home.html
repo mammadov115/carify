@@ -1,4 +1,3 @@
-{% load number_format %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,8 +13,6 @@
 
     <!-- Alpine.js -->
     <script src="//unpkg.com/alpinejs" defer></script>
-
-
   </head>
 
   <body class="font-inter">
@@ -64,93 +61,7 @@
       <div class="row">
         <!-- Filter -->
         <div class="col-12 col-lg-3 order-lg-1">
-          <form method="get" action="{% url 'home' %}">
-            <div class="bg-white shadow p-3 mb-3">
-              <div class="form-check">
-                <input class="form-check-input" type="radio" value="" name="category" id="auctionCheck" checked />
-                <label class="form-check-label" for="auctionCheck">
-                  Bütün avtomobillər
-                </label>
-              </div>
-
-              <div class="form-check">
-                <input class="form-check-input" type="radio" value="auction" name="category" id="auctionCheck" {% if selected_category == 'auction' %}checked{% endif %} />
-                <label class="form-check-label" for="auctionCheck">
-                  <i class="bi bi-currency-dollar gold-icon"></i>
-                  Hərrac maşınları
-                </label>
-              </div>
-
-              <div class="form-check">
-                <input class="form-check-input" type="radio" value="korea_stock" name="category" id="koreaStockCheck" {% if selected_category == 'korea_stock' %}checked{% endif %}  />
-                <label class="form-check-label" for="koreaStockCheck">
-                  <i class="bi bi-box-seam-fill korea-stock-icon"></i>
-                  Koreya stokumuz
-                </label>
-              </div>
-
-              <div class="form-check">
-                <input class="form-check-input" type="radio" value="on_the_way" name="category" id="onTheWayCheck" {% if selected_category == 'on_the_way' %}checked{% endif %}/>
-                <label class="form-check-label" for="onTheWayCheck">
-                  <i class="bi bi-truck on-the-way-icon"></i>
-                  Yolda satılır
-                </label>
-              </div>
-
-              <div class="form-check">
-                <input class="form-check-input" type="radio" value="sold_out" name="category" id="soldOutCheck" {% if selected_category == 'sold_out' %}checked{% endif %}/>
-                <label class="form-check-label" for="onTheWayCheck">
-                  <i class="bi bi-check-lg sold-out-icon"></i>
-                  Satıldı
-                </label>
-              </div>
-            </div>
-
-            <div class="bg-white shadow p-3 mt-2 mb-3" x-data="carFilter({{ selected_brand|default:'null' }}, {{ selected_model|default:'null' }})">
-              <select name="brand" class="form-select mb-2" aria-label="Select Make" x-on:change="updateModels($event)">
-                <option value="" selected>Marka seçin...</option>
-                {% for brand in brands %}
-                  <option value="{{ brand.id }}" {% if selected_brand == brand.id %}selected{% endif %}>{{ brand.name }}</option>
-                {% endfor %}
-              </select>
-
-              <select name="model" class="form-select" aria-label="Select Model" x-bind:disabled="models.length === 0">
-                <option value="" selected>Model seçin...</option>
-                <template x-for="model in models" :key="model.id">
-                  <option :value="model.id" x-text="model.name" :selected="model.id == selected_model"></option>
-                </template> 
-              </select>
-            </div>
-
-            <!-- Select Year-->
-            {% comment %} <div class="bg-white shadow p-3 mt-2 mb-2">
-              <select name="year" class="form-select" aria-label="Select Year">
-                <option value="" selected>İl seçin...</option>
-                {% for year in years %}
-                  <option value="{{ year.id }}" {% if selected_year == year.id %}selected{% endif %}>{{ year.year }}</option>
-                {% endfor %}
-              </select>
-
-            </div>  {% endcomment %}
-
-            <!-- Select Year Range (2016-2020) -->
-            <div class="bg-white shadow p-3 mt-2 mb-2">
-              <label class="form-label">İl aralığı seçin:</label>
-              <div class="range_container ">
-                  <div class="sliders_control">
-                    <div class="mb-4 text-center">
-                      <span id="fromYear" >{{ selected_from_year }}</span> - <span id="toYear" >{{ selected_to_year }}</span>
-                    </div>
-
-                    <input id="fromSlider" type="range" value="{{ selected_from_year }}" min="{{ min_year }}" max="{{ max_year }}"  name="from_year"/>
-                    <input id="toSlider" type="range" value="{{ selected_to_year }}" min="{{ min_year }}" max="{{ max_year }}"  name="to_year"/>
-                  </div>
-              </div>
-            </div>
-
-
-            <input class="btn btn-primary w-100 mb-4" type="submit" value="Axtar" />
-          </form>
+          {% include 'partials/filter.html' %}
         </div>
 
         <!-- Cars -->
@@ -168,67 +79,8 @@
               </a>
             </div>
 
-            {% for car in cars %}
-              <div class="col-6 col-lg-3 mb-2">
-                <div class="card car-card position-relative">
-                  <div class="image-container position-relative">
-                    {% if car.category == 'auction' %}
-                      <span class="badge bg-primary position-absolute top-0 start-0 m-2 car-badge">Hərrac</span>
-                    {% elif car.category == 'korea_stock' %}
-                      <span class="badge bg-danger position-absolute top-0 start-0 m-2 car-badge" >Stok</span>
-                    {% elif car.category == 'on_the_way' %}
-                      <span class="badge bg-success position-absolute top-0 start-0 m-2 car-badge">Yolda</span>
-                    {% elif car.category == 'sold_out' %}
-                      <span class="badge bg-warning position-absolute top-0 start-0 m-2 car-badge">Satıldı</span>
-                    {% endif %}
-                    <i class="bi 
-                      {% if car.id|stringformat:'s' in request.session.favorites %}
-                        bi-heart-fill
-                      {% else %}                        
-                        bi-heart
-                      {% endif %} 
-                      position-absolute top-0 end-0 m-2 favorite-icon"
-                      data-car-id="{{ car.id }}"
-                      >
-                    </i>
-
-                    <img src="{% if car.main_image %}{{ car.main_image.url }}{% endif %}" class="card-img-top object-fit-cover {% if car.category == "sold_out" %} grayscale{% endif %}" alt="Car Image" />
-
-                    <div class="price-bar position-absolute bottom-0 start-0 w-100 bg-dark text-white text-center py-1 px-2 opacity-75 border-bottom border-4 border-primary fw-bold">{{ car.price|thousands_dot  }} $</div>
-                  </div>
-
-                  <div class="card-body">
-                    {% comment %} <h5 class="price">910,000₼</h5> {% endcomment %}
-                    <h6 class="card-title text-truncate">{{ car.brand.name }} - {{ car.model.name }}</h6>
-                    <p class="card-text">{{ car.year }} / {{ car.mileage }} km / Bakı</p>
-                    <div class="d-flex gap-2 parts-status">
-                      <!--changed_parts_count-->
-                      {% if car.changed_parts_count == 0 %}
-                        <span class="badge rounded bg-primary-subtle text-primary">Dəyişən yox</span>
-                      {% elif car.changed_parts_count == 1 %}
-                        <span class="badge rounded bg-success-subtle text-success">Dəyişən (1)</span>
-                      {% elif car.changed_parts_count == 2 %}
-                        <span class="badge rounded bg-warning-subtle text-warning">Dəyişən (2)</span>
-                      {% else %}
-                        <span class="badge rounded bg-danger-subtle text-danger">Dəyişən (2+)</span>
-                      {% endif %}
-
-                      
-                      <!--painted_parts_count-->
-                      {% if car.painted_parts_count == 0 %}
-                        <span class="badge rounded bg-primary-subtle text-primary">Boya yox</span>
-                      {% elif car.painted_parts_count == 1 %}
-                        <span class="badge rounded bg-success-subtle text-success">Boya (1)</span>
-                      {% elif car.painted_parts_count == 2 %}
-                        <span class="badge rounded bg-warning-subtle text-warning">Boya (2)</span>
-                      {% else %}
-                        <span class="badge rounded bg-danger-subtle text-danger">Boya (2+)</span>
-                      {% endif %}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% endfor %}
+          <!--Car cards-->
+          {% include "partials/cars.html" %}
           </div>
 
           <div class="row my-3">
@@ -356,22 +208,21 @@
         },
         fetchModels(brandId) {
           fetch(`/ajax/models/${brandId}/`)
-            .then(res => res.json())
-            .then(data => {
+            .then((res) => res.json())
+            .then((data) => {
               this.models = data
               // əgər initial model serverdən varsa, onu seç
               if (this.selected_model) {
-                const exists = this.models.find(m => m.id === this.selected_model)
+                const exists = this.models.find((m) => m.id === this.selected_model)
                 if (!exists) this.selected_model = null
               }
             })
-            .catch(err => {
+            .catch((err) => {
               console.error('Failed to fetch models', err)
               this.models = []
             })
         }
       }
-}
-
+    }
   </script>
 </html>

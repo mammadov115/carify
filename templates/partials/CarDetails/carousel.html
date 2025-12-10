@@ -1,0 +1,182 @@
+<style>
+  .plus-more-overlay  {
+    background-image: url('{{ car.main_image.url }}'); 
+
+  }
+
+</style>
+
+
+<div class="container mt-5">
+  <div class="row car-gallery g-0 d-flex">
+    <div class="col-md-8">
+      <div class="main-image-container">
+        <img id="mainImage" src="{{ car.main_image.url }}" class="img-fluid rounded shadow" alt="Main Car Image" data-bs-toggle="modal" data-bs-target="#imageModal" />
+        {% comment %} <div class="image-overlay">
+          <span class="car-model">Forte</span>
+          <span class="plate-number">69rool0527</span>
+        </div> {% endcomment %}
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="row row-cols-3 g-0 thumbnail-grid">
+        <div class="col">
+            <img src="{{ car.main_image.url }}" class="img-fluid rounded thumbnail-img active" alt="Car Thumbnail 0" data-full-src="{{ car.main_image.url }}" data-slide-to="0" />
+          </div>
+        {% for image_object in car.images.all %}
+          {% if forloop.counter0 < 16 %}
+            <div class="col">
+              <img src="{{ image_object.image.url }}" class="img-fluid rounded thumbnail-img " alt="Car Thumbnail {{ forloop.counter }}" data-full-src="{{ image_object.image.url }}" data-slide-to="{{ forloop.counter }}" />
+            </div>
+          {% endif %}
+        {% endfor %}
+        <div class="col">
+          <div class="plus-more-overlay rounded d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#imageModal" style="cursor: pointer;">
+            {% with total_images=car.images.all|length %}
+              {% with remaining_images=total_images|add:"-16" %}
+                  {% if remaining_images > 0 %}
+                      <span class="h4 text-white m-0">+{{ remaining_images }}</span>
+                  {% else %}
+                      <span class="h4 text-white m-0">View All</span>
+                  {% endif %}
+              {% endwith %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div id="modalCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner" id="carouselInner"></div>
+
+          <button class="carousel-control-prev" type="button" data-bs-target="#modalCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#modalCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+// Data structure to hold all image paths (main images and thumbnails)
+// In a real application, this would likely be loaded from a backend API.
+const imageFiles = [
+  { 
+        src: '{{ car.main_image.url }}', 
+        thumb: '{{ car.main_image.url }}' 
+  },
+  {% for image_obj in car.images.all %}
+      { 
+          src: '{{ image_obj.image.url }}', 
+          thumb: '{{ image_obj.imge.url }}' 
+      }{% if not forloop.last %},{% endif %} 
+      // If this is not the last item in the loop, add a comma (,)
+  {% endfor %}
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+    const mainImage = document.getElementById('mainImage');
+    const thumbnails = document.querySelectorAll('.thumbnail-img');
+    const carouselInner = document.getElementById('carouselInner');
+    const modalCarousel = new bootstrap.Carousel(document.getElementById('modalCarousel'));
+    const imageModal = document.getElementById('imageModal');
+    
+    // -------------------------------------------------------------------
+    // A. Main Image Switch Functionality (Thumbnail Click)
+    // -------------------------------------------------------------------
+
+    thumbnails.forEach(thumb => {
+        thumb.addEventListener('click', function() {
+            // 1. Update the Main Image
+            mainImage.src = this.getAttribute('data-full-src');
+            
+            // 2. Update the active state (border)
+            // Remove 'active' class from all thumbnails
+            thumbnails.forEach(t => t.classList.remove('active'));
+            // Add 'active' class to the clicked thumbnail
+            this.classList.add('active');
+        });
+    });
+
+
+    // -------------------------------------------------------------------
+    // B. Modal Carousel Initialization (For Fullscreen View)
+    // -------------------------------------------------------------------
+
+    // Function to dynamically populate the Bootstrap Carousel in the Modal
+    function populateModalCarousel() {
+        carouselInner.innerHTML = ''; // Clear existing items
+
+        imageFiles.forEach((image, index) => {
+            // Create a new carousel item
+            const carouselItem = document.createElement('div');
+            carouselItem.classList.add('carousel-item');
+            
+            // Set the first item as active
+            if (index === 0) {
+                carouselItem.classList.add('active');
+            }
+            
+            // Create the image element
+            const img = document.createElement('img');
+            img.src = image.src;
+            img.classList.add('d-block', 'w-100');
+            img.alt = `Car Image ${index + 1}`;
+            
+            // Append image to the item, and item to the carousel
+            carouselItem.appendChild(img);
+            carouselInner.appendChild(carouselItem);
+        });
+    }
+
+    // Populate the carousel when the page loads
+    populateModalCarousel();
+
+    // -------------------------------------------------------------------
+    // C. Sync Modal Carousel on Open
+    // -------------------------------------------------------------------
+
+    // When the modal is about to be shown (e.g., main image or '+22' clicked)
+    imageModal.addEventListener('show.bs.modal', function (event) {
+        let activeIndex = 0;
+        
+        // Check which thumbnail is currently active to set the starting slide
+        const activeThumbnail = document.querySelector('.thumbnail-img.active');
+        if (activeThumbnail) {
+            // Get the index from the thumbnail's data attribute
+            activeIndex = parseInt(activeThumbnail.getAttribute('data-slide-to'));
+            console.log(activeIndex)
+
+        }
+        
+        // Move the carousel to the correct slide
+        // The Bootstrap Carousel API's 'to' method is used here
+        if (activeIndex >= 0) {
+            modalCarousel.to(activeIndex);
+        } else {
+             // Ensure it resets to the first slide if the main image was clicked directly 
+             // and no thumbnail had been selected yet (i.e., index 0)
+             modalCarousel.to(-1);
+        }
+    });
+    
+});
+</script>

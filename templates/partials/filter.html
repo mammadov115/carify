@@ -1,0 +1,88 @@
+
+<form method="get" action="{% url 'home' %}">
+  <div class="bg-white shadow p-3 mb-3">
+    <div class="form-check">
+      <input class="form-check-input" type="radio" value="" name="category" id="auctionCheck" checked />
+      <label class="form-check-label" for="auctionCheck">
+        Bütün avtomobillər
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" type="radio" value="auction" name="category" id="auctionCheck" {% if selected_category == 'auction' %}checked{% endif %} />
+      <label class="form-check-label" for="auctionCheck">
+        <i class="bi bi-currency-dollar gold-icon"></i>
+        Hərrac maşınları
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" type="radio" value="korea_stock" name="category" id="koreaStockCheck" {% if selected_category == 'korea_stock' %}checked{% endif %}  />
+      <label class="form-check-label" for="koreaStockCheck">
+        <i class="bi bi-box-seam-fill korea-stock-icon"></i>
+        Koreya stokumuz
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" type="radio" value="on_the_way" name="category" id="onTheWayCheck" {% if selected_category == 'on_the_way' %}checked{% endif %}/>
+      <label class="form-check-label" for="onTheWayCheck">
+        <i class="bi bi-truck on-the-way-icon"></i>
+        Yolda satılır
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" type="radio" value="sold_out" name="category" id="soldOutCheck" {% if selected_category == 'sold_out' %}checked{% endif %}/>
+      <label class="form-check-label" for="onTheWayCheck">
+        <i class="bi bi-check-lg sold-out-icon"></i>
+        Satıldı
+      </label>
+    </div>
+  </div>
+
+  <div class="bg-white shadow p-3 mt-2 mb-3" x-data="carFilter({{ selected_brand|default:'null' }}, {{ selected_model|default:'null' }})">
+    <select name="brand" class="form-select mb-2" aria-label="Select Make" x-on:change="updateModels($event)">
+      <option value="" selected>Marka seçin...</option>
+      {% for brand in brands %}
+        <option value="{{ brand.id }}" {% if selected_brand == brand.id %}selected{% endif %}>{{ brand.name }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="model" class="form-select" aria-label="Select Model" x-bind:disabled="models.length === 0">
+      <option value="" selected>Model seçin...</option>
+      <template x-for="model in models" :key="model.id">
+        <option :value="model.id" x-text="model.name" :selected="model.id == selected_model"></option>
+      </template> 
+    </select>
+  </div>
+
+  <!-- Select Year-->
+  {% comment %} <div class="bg-white shadow p-3 mt-2 mb-2">
+    <select name="year" class="form-select" aria-label="Select Year">
+      <option value="" selected>İl seçin...</option>
+      {% for year in years %}
+        <option value="{{ year.id }}" {% if selected_year == year.id %}selected{% endif %}>{{ year.year }}</option>
+      {% endfor %}
+    </select>
+
+  </div>  {% endcomment %}
+
+  <!-- Select Year Range (2016-2020) -->
+  <div class="bg-white shadow p-3 mt-2 mb-2">
+    <label class="form-label">İl aralığı seçin:</label>
+    <div class="range_container ">
+        <div class="sliders_control">
+          <div class="mb-4 text-center">
+            <span id="fromYear" >{{ selected_from_year }}</span> - <span id="toYear" >{{ selected_to_year }}</span>
+          </div>
+
+          <input id="fromSlider" type="range" value="{{ selected_from_year }}" min="{{ min_year }}" max="{{ max_year }}"  name="from_year"/>
+          <input id="toSlider" type="range" value="{{ selected_to_year }}" min="{{ min_year }}" max="{{ max_year }}"  name="to_year"/>
+        </div>
+    </div>
+  </div>
+
+
+  <input class="btn btn-primary w-100 mb-4" type="submit" value="Axtar" />
+</form>
