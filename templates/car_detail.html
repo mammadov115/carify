@@ -70,9 +70,6 @@
 
             <div class="mt-3">
               <span class="fs-2 fw-bolder text-primary">${{ car.price|thousands_dot }}</span>
-              {% if car.is_negotiable %}
-                <span class="badge bg-success ms-2">Danışıq mümkündür</span>
-              {% endif %}
             </div>
           </div>
         </div>
@@ -136,9 +133,13 @@
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="fw-medium">Dəyişdirilən Hissə Sayı:</span>
                     <span class="badge rounded-pill {% if car.changed_parts_count > 0 %}
+                        
                         bg-danger
+
                       {% else %}
+                        
                         bg-secondary
+
                       {% endif %} fs-6">
                       {{ car.changed_parts_count }}
                     </span>
@@ -146,9 +147,13 @@
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="fw-medium">Rənglənmiş Hissə Sayı:</span>
                     <span class="badge rounded-pill {% if car.painted_parts_count > 0 %}
+                        
                         bg-danger
+
                       {% else %}
+                        
                         bg-secondary
+
                       {% endif %} fs-6">
                       {{ car.painted_parts_count }}
                     </span>
@@ -171,11 +176,7 @@
               <div class="card-body">
                 <h5 class="card-title text-primary fw-bold">Qiymət</h5>
                 <p class="card-text fs-3 fw-bolder text-dark mb-0">${{ car.price|thousands_dot }}</p>
-                {% if car.is_negotiable %}
-                  <small class="text-success fw-medium"><i class="bi bi-currency-dollar me-1"></i> Qiymət Danışıla Bilər</small>
-                {% else %}
-                  <small class="text-danger fw-medium">Son Qiymət</small>
-                {% endif %}
+                <small class="text-success fw-medium">Gömrük daxil: {{ car.total_price|thousands_dot }}<i class="bi bi-currency-dollar me-1"></i></small>
               </div>
             </div>
           </div>
@@ -215,22 +216,19 @@
 
     <!-- Related Cars -->
     {% if recommended_cars %}
-        <div class="container py-4">
+      <div class="container py-4">
         <h3 class="mb-3 fw-bold" style="font-family: 'Segoe UI', sans-serif; color: #222;">Tövsiyə olunan avtomobillər</h3>
         <div class="d-flex overflow-auto flex-row gap-3">
-            {% for car in recommended_cars %}
+          {% for car in recommended_cars %}
             {% include 'partials/cars.html' %}
-            {% endfor %}
+          {% endfor %}
         </div>
-        </div>
+      </div>
     {% endif %}
 
     <!-- Whatsapp -->
-    <div class="d-grid mt-4">
-      {% with whatsapp_message='Bu masin barede etrafli melumat almaq isteyirem: ' car_name=car %}
-        <a href="https://wa.me/994506222692?text={{ whatsapp_message|urlencode }}{{ car_name|urlencode }}" target="_blank" class="btn btn-success btn-lg fw-bold shadow-lg" role="button"><i class="bi bi-whatsapp me-2"></i> WhatsApp ilə Müraciət</a>
-      {% endwith %}
-    </div>
+    <!-- Sticky WhatsApp CTA -->
+    <a href="https://wa.me/994506222692?text=Salam! Bu avtomobil mənim diqqətimi çəkdi. Əlavə məlumat verə bilərsinizmi? %0A {{ request.scheme }}://{{ request.get_host }}{% url 'car_detail' car.slug %}" target="_blank" class="btn btn-success rounded-circle position-fixed bottom-0 end-0 m-3 d-flex align-items-center justify-content-center shadow" style="width: 55px; height: 55px;"><i class="bi bi-whatsapp fs-2"></i></a>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>

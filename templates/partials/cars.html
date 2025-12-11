@@ -5,13 +5,13 @@
   <div class="card car-card position-relative">
     <div class="image-container position-relative">
       {% if car.category == 'auction' %}
-        <span class="badge bg-primary position-absolute top-0 start-0 m-2 car-badge">Hərrac</span>
+        <span class="badge bg-warning position-absolute top-0 start-0 m-2 car-badge">Hərrac</span>
       {% elif car.category == 'korea_stock' %}
-        <span class="badge bg-danger position-absolute top-0 start-0 m-2 car-badge">Stok</span>
+        <span class="badge bg-primary position-absolute top-0 start-0 m-2 car-badge">Stok</span>
       {% elif car.category == 'on_the_way' %}
         <span class="badge bg-success position-absolute top-0 start-0 m-2 car-badge">Yolda</span>
       {% elif car.category == 'sold_out' %}
-        <span class="badge bg-warning position-absolute top-0 start-0 m-2 car-badge">Satıldı</span>
+        <span class="badge bg-danger position-absolute top-0 start-0 m-2 car-badge">Satıldı</span>
       {% endif %}
       <i class="bi 
                 {% if car.id|stringformat:'s' in request.session.favorites %}
@@ -32,7 +32,7 @@
       <div class="card-body">
         {% comment %} <h5 class="price">910,000₼</h5> {% endcomment %}
         <h6 class="card-title text-truncate">{{ car.brand.name }} - {{ car.model.name }}</h6>
-        <p class="card-text">{{ car.year }} / {{ car.mileage }} km / Bakı</p>
+        <p class="card-text">{{ car.year }} / {{ car.mileage }} km</p>
         <div class="d-flex gap-2 parts-status">
           <!-- changed_parts_count -->
           {% if car.changed_parts_count == 0 %}

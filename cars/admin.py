@@ -15,10 +15,10 @@ class CarImageInline(ImageUploaderInline):
 class CarAdmin(admin.ModelAdmin):
     """
     Admin configuration for Car model.
-    Includes dealer info, technical specs, pricing, condition, and features.
+    Includes dealer info, technical specs, pricing, and features.
     """
-    list_display = ("brand", "model", "year", "price", "customs_tax_estimate","total_price", "condition")
-    list_filter = ("brand", "condition", "fuel_type", "transmission", "is_negotiable")
+    list_display = ("brand", "model", "year", "price", "customs_tax_estimate","total_price")
+    list_filter = ("brand", "fuel_type", "transmission")
     search_fields = ("brand", "model")
     inlines = [CarImageInline]
     ordering = ("-created_at",)
