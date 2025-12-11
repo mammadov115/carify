@@ -141,7 +141,7 @@ class CarDetailView(DetailView):
         # -----------------------------
         # Recommended cars for this car
         # -----------------------------
-        recommended_cars = recommend_for_car(car_object.id, limit=3)
+        recommended_cars = recommend_for_car(car_object.id, limit=6)
         context["recommended_cars"] = recommended_cars
         return context
 

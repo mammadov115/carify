@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" />
     <link rel="stylesheet" href="/static/car-detail.css" />
-    <link rel="stylesheet" href="/static/favorite-icon.css">
+    <link rel="stylesheet" href="/static/favorite-icon.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" />
     <!-- HTMX -->
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
@@ -81,179 +81,154 @@
 
     {% include 'partials/car_details/carousel.html' %}
 
-    <!--Car info-->
+    <!-- Car info -->
     <section class="py-5">
-        <div class="container">
-            <div class="row g-4">
-                
-                <div class="col-lg-8">
-                    
-                    <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-primary text-white fs-5 fw-semibold">
-                            Texniki Göstəricilər
-                        </div>
-                        <div class="card-body p-0">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="fw-medium">Yanacaq Tipi:</span>
-                                    <span>{{ car.get_fuel_type_display }}</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="fw-medium">Sürətlər Qutusu:</span>
-                                    <span>{{ car.get_transmission_display }}</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="fw-medium">Mühərrik Həcmi:</span>
-                                    <span>{{ car.engine_volume|floatformat:1 }} L</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="fw-medium">Yürüş (Mileage):</span>
-                                    <span>{{ car.mileage|default:"N/A" }} km</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="fw-medium">Vəziyyət (Condition):</span>
-                                    <span>{{ car.get_condition_display }}</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-primary text-white fs-5 fw-semibold">
-                            Təsvir
-                        </div>
-                        <div class="card-body">
-                            {% if car.description %}
-                                <p>{{ car.description|linebreaksbr }}</p>
-                            {% else %}
-                                <p class="text-muted">Bu avtomobil üçün təsvir əlavə edilməyib.</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                </div>
-                
-                <div class="col-lg-4">
-                    
-                    <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-warning text-dark fs-5 fw-semibold">
-                            <i class="bi bi-wrench me-2"></i> Gövdənin Vəziyyəti
-                        </div>
-                        <div class="card-body p-0">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="fw-medium">Dəyişdirilən Hissə Sayı:</span>
-                                    <span class="badge rounded-pill {% if car.changed_parts_count > 0 %}bg-danger{% else %}bg-secondary{% endif %} fs-6">
-                                        {{ car.changed_parts_count }}
-                                    </span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="fw-medium">Rənglənmiş Hissə Sayı:</span>
-                                    <span class="badge rounded-pill {% if car.painted_parts_count > 0 %}bg-danger{% else %}bg-secondary{% endif %} fs-6">
-                                        {{ car.painted_parts_count }}
-                                    </span>
-                                </li>
-                                {% comment %} <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="fw-medium">Seçilmiş Avtomobil:</span>
-                                    <span>
-                                        {% if car.featured %}
-                                            <i class="bi bi-check-circle-fill text-success fs-5"></i>
-                                        {% else %}
-                                            <i class="bi bi-x-circle-fill text-muted fs-5"></i>
-                                        {% endif %}
-                                    </span>
-                                </li> {% endcomment %}
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="card bg-info bg-opacity-10 border-info border-2 border-start shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title text-primary fw-bold">Qiymət</h5>
-                            <p class="card-text fs-3 fw-bolder text-dark mb-0">
-                                ${{ car.price|thousands_dot }}
-                            </p>
-                            {% if car.is_negotiable %}
-                                <small class="text-success fw-medium">
-                                    <i class="bi bi-currency-dollar me-1"></i> Qiymət Danışıla Bilər
-                                </small>
-                            {% else %}
-                                <small class="text-danger fw-medium">
-                                    Son Qiymət
-                                </small>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-lg-8">
+            <div class="card shadow-sm border-0 mb-4">
+              <div class="card-header bg-primary text-white fs-5 fw-semibold">Texniki Göstəricilər</div>
+              <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-medium">Yanacaq Tipi:</span>
+                    <span>{{ car.get_fuel_type_display }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-medium">Sürətlər Qutusu:</span>
+                    <span>{{ car.get_transmission_display }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-medium">Mühərrik Həcmi:</span>
+                    <span>{{ car.engine_volume|floatformat:1 }} L</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-medium">Yürüş (Mileage):</span>
+                    <span>{{ car.mileage|default:'N/A' }} km</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-medium">Vəziyyət (Condition):</span>
+                    <span>{{ car.get_condition_display }}</span>
+                  </li>
+                </ul>
+              </div>
             </div>
+
+            <div class="card shadow-sm border-0">
+              <div class="card-header bg-primary text-white fs-5 fw-semibold">Təsvir</div>
+              <div class="card-body">
+                {% if car.description %}
+                  <p>{{ car.description|linebreaksbr }}</p>
+                {% else %}
+                  <p class="text-muted">Bu avtomobil üçün təsvir əlavə edilməyib.</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="card shadow-sm border-0 mb-4">
+              <div class="card-header bg-warning text-dark fs-5 fw-semibold">
+                <i class="bi bi-wrench me-2"></i> Gövdənin Vəziyyəti
+              </div>
+              <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-medium">Dəyişdirilən Hissə Sayı:</span>
+                    <span class="badge rounded-pill {% if car.changed_parts_count > 0 %}
+                        bg-danger
+                      {% else %}
+                        bg-secondary
+                      {% endif %} fs-6">
+                      {{ car.changed_parts_count }}
+                    </span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-medium">Rənglənmiş Hissə Sayı:</span>
+                    <span class="badge rounded-pill {% if car.painted_parts_count > 0 %}
+                        bg-danger
+                      {% else %}
+                        bg-secondary
+                      {% endif %} fs-6">
+                      {{ car.painted_parts_count }}
+                    </span>
+                  </li>
+                  {% comment %} <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-medium">Seçilmiş Avtomobil:</span>
+                    <span>
+                      {% if car.featured %}
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                      {% else %}
+                        <i class="bi bi-x-circle-fill text-muted fs-5"></i>
+                      {% endif %}
+                    </span>
+                  </li> {% endcomment %}
+                </ul>
+              </div>
+            </div>
+
+            <div class="card bg-info bg-opacity-10 border-info border-2 border-start shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title text-primary fw-bold">Qiymət</h5>
+                <p class="card-text fs-3 fw-bolder text-dark mb-0">${{ car.price|thousands_dot }}</p>
+                {% if car.is_negotiable %}
+                  <small class="text-success fw-medium"><i class="bi bi-currency-dollar me-1"></i> Qiymət Danışıla Bilər</small>
+                {% else %}
+                  <small class="text-danger fw-medium">Son Qiymət</small>
+                {% endif %}
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
-    <!--Youtube video-->
+    <!-- Youtube video -->
     <div class="container py-4">
-        {% if embed_url %}
-          <h2 class="mb-4 text-primary fw-bold">Multimedia</h2>
-        {% endif %}
-        <div class="row g-4">
-            
-            {% with embed_url=car.promotion_video_url|replace %}
-                {% if embed_url %}
-                    <div class="col-lg-6">
-                        <h4 class="mb-3">Avtomobilin Təqdimatı</h4>
-                        <div class="ratio ratio-16x9 shadow-lg">
-                            <iframe 
-                                src="{{ embed_url }}" 
-                                title="YouTube video player" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                referrerpolicy="strict-origin-when-cross-origin"
-                                allowfullscreen
-                            ></iframe>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endwith %}
-            
-            {% with embed_url=car.paint_test_video_url|replace  %}
-                {% if embed_url %}
-                    <div class="col-lg-6">
-                        <h4 class="mb-3">Boya Testi Videosu</h4>
-                        <div class="ratio ratio-16x9 shadow-lg">
-                            <iframe 
-                                src="{{ embed_url }}" 
-                                title="YouTube video player" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                referrerpolicy="strict-origin-when-cross-origin"
-                                allowfullscreen
-                            ></iframe>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endwith %}
-            
-        </div>
+      {% if embed_url %}
+        <h2 class="mb-4 text-primary fw-bold">Multimedia</h2>
+      {% endif %}
+      <div class="row g-4">
+        {% with embed_url=car.promotion_video_url|replace %}
+          {% if embed_url %}
+            <div class="col-lg-6">
+              <h4 class="mb-3">Avtomobilin Təqdimatı</h4>
+              <div class="ratio ratio-16x9 shadow-lg">
+                <iframe src="{{ embed_url }}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+              </div>
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        {% with embed_url=car.paint_test_video_url|replace %}
+          {% if embed_url %}
+            <div class="col-lg-6">
+              <h4 class="mb-3">Boya Testi Videosu</h4>
+              <div class="ratio ratio-16x9 shadow-lg">
+                <iframe src="{{ embed_url }}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+              </div>
+            </div>
+          {% endif %}
+        {% endwith %}
+      </div>
     </div>
 
-    <!--Related Cars-->
-    <div class="container py-4">
-        <div class="row">
-            {% for car in recommended_cars  %}
-                {% include "partials/cars.html" %}
+    <!-- Related Cars -->
+    {% if recommended_cars %}
+        <div class="container py-4">
+        <h3 class="mb-3 fw-bold" style="font-family: 'Segoe UI', sans-serif; color: #222;">Tövsiyə olunan avtomobillər</h3>
+        <div class="d-flex overflow-auto flex-row gap-3">
+            {% for car in recommended_cars %}
+            {% include 'partials/cars.html' %}
             {% endfor %}
         </div>
-    </div>    
+        </div>
+    {% endif %}
 
-    <!--Whatsapp-->
+    <!-- Whatsapp -->
     <div class="d-grid mt-4">
-      {% with whatsapp_message="Bu masin barede etrafli melumat almaq isteyirem: " car_name=car %}
-          <a 
-              href="https://wa.me/994506222692?text={{ whatsapp_message|urlencode }}{{ car_name|urlencode }}" 
-              target="_blank" 
-              class="btn btn-success btn-lg fw-bold shadow-lg" 
-              role="button"
-          >
-              <i class="bi bi-whatsapp me-2"></i> WhatsApp ilə Müraciət
-          </a>
+      {% with whatsapp_message='Bu masin barede etrafli melumat almaq isteyirem: ' car_name=car %}
+        <a href="https://wa.me/994506222692?text={{ whatsapp_message|urlencode }}{{ car_name|urlencode }}" target="_blank" class="btn btn-success btn-lg fw-bold shadow-lg" role="button"><i class="bi bi-whatsapp me-2"></i> WhatsApp ilə Müraciət</a>
       {% endwith %}
     </div>
 
@@ -262,31 +237,57 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
+      $(document).ready(function () {
         $('.favorite-icon').click(function () {
-            var icon = $(this)
-            var carId = icon.data('car-id')
-        
-            $.ajax({
+          var icon = $(this)
+          var carId = icon.data('car-id')
+      
+          $.ajax({
             url: "{% url 'toggle_favorite' %}",
             method: 'POST',
             data: {
-                car_id: carId,
-                csrfmiddlewaretoken: '{{ csrf_token }}'
+              car_id: carId,
+              csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             success: function (response) {
-                if (response.success) {
+              if (response.success) {
                 if (response.added) {
-                    icon.removeClass('bi-heart').addClass('bi-heart-fill')
+                  icon.removeClass('bi-heart').addClass('bi-heart-fill')
                 } else {
-                    icon.removeClass('bi-heart-fill').addClass('bi-heart')
+                  icon.removeClass('bi-heart-fill').addClass('bi-heart')
                 }
-                }
+              }
             }
-            })
+          })
         })
-        })
+      })
+      
+      const slider = document.querySelector('.scroll-container')
+      let isDown = false
+      let startX
+      let scrollLeft
+      
+      slider.addEventListener('mousedown', (e) => {
+        isDown = true
+        slider.classList.add('active')
+        startX = e.pageX - slider.offsetLeft
+        scrollLeft = slider.scrollLeft
+      })
+      slider.addEventListener('mouseleave', () => {
+        isDown = false
+        slider.classList.remove('active')
+      })
+      slider.addEventListener('mouseup', () => {
+        isDown = false
+        slider.classList.remove('active')
+      })
+      slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return
+        e.preventDefault()
+        const x = e.pageX - slider.offsetLeft
+        const walk = (x - startX) * 2 // sürəti artırmaq üçün *2
+        slider.scrollLeft = scrollLeft - walk
+      })
     </script>
   </body>
-
- </html>
+</html>
