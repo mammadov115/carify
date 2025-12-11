@@ -80,7 +80,9 @@
             </div>
 
           <!--Car cards-->
-          {% include "partials/cars.html" %}
+          {% for car in cars %}
+            {% include "partials/cars.html" %}
+          {% endfor %}
           </div>
 
           <div class="row my-3">

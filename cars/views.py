@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 from django.db.models import Case, When
 from django.db.models import Q, Min, Max
 from django.shortcuts import get_object_or_404
+from .recommendation import recommend_for_car
 
 # Create your views here.
 
@@ -91,7 +92,6 @@ def car_models_by_brand(request, brand_id):
     print(brand_id)
     return JsonResponse(list(models), safe=False)
 
-
 class CarDetailView(DetailView):
     """
     Displays a detailed page for a single car listing.
@@ -138,7 +138,11 @@ class CarDetailView(DetailView):
         # Add the retrieved object to the context
         context["seventeenth_image"] = seventeenth_image
         
-        # context["related_cars"] = Car.objects.filter(featured=True)[:4]
+        # -----------------------------
+        # Recommended cars for this car
+        # -----------------------------
+        recommended_cars = recommend_for_car(car_object.id, limit=3)
+        context["recommended_cars"] = recommended_cars
         return context
 
 

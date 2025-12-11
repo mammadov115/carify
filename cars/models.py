@@ -104,6 +104,17 @@ class Car(models.Model):
 
     # Pricing
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    customs_tax_estimate = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        null=True,
+        help_text="Estimated customs tax for the car (in USD)."
+    )
+    total_price = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        null=True
+    )
+
     is_negotiable = models.BooleanField(default=False)
 
     # Condition
@@ -140,6 +151,7 @@ class Car(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
     def save(self, *args, **kwargs):
         """
         Automatically generates slug from brand, model, and year if not provided.
@@ -170,6 +182,10 @@ class Car(models.Model):
 
         # save result
         background.save(self.main_image.path, quality=90)
+
+        # Calculate total_price automatically
+        self.total_price = (self.price or 0) + (self.customs_tax_estimate or 0)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.brand} {self.model} {self.year}"
