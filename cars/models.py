@@ -115,16 +115,8 @@ class Car(models.Model):
         null=True
     )
 
-    is_negotiable = models.BooleanField(default=False)
 
     # Condition
-    condition = models.CharField(
-        max_length=20,
-        choices=[
-            ('new', 'New'),
-            ('used', 'Used')
-        ]
-    )
     mileage = models.PositiveIntegerField(help_text="km")
 
     # Media
