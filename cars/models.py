@@ -303,6 +303,8 @@ class OurValue(models.Model):
         verbose_name="Bootstrap Icon Name",
         help_text="Example: bi-journal-check, bi-tools, bi-truck"
     )
+    icon_color = models.CharField(max_length=100, verbose_name="Icon color", help_text="Example: info, danger, sucess")
+
     order = models.PositiveSmallIntegerField(
         default=0, 
         verbose_name="Display Order", 

@@ -13,7 +13,7 @@
                 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url "about_us" %}"><i class="bi bi-info-circle-fill me-1"></i> Haqqımızda</a>
+                        <a class="nav-link {% if request.path == '/about-us/' %}active{% endif %}" href="{% url "about_us" %}"><i class="bi bi-info-circle-fill me-1"></i> Haqqımızda</a>
                     </li>
                     {% comment %} <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
