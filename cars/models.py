@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from PIL import Image
+from django.core.exceptions import ValidationError
 
 
 class Brand(models.Model):
@@ -225,3 +226,128 @@ class CarImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.car}"
+    
+
+# --- 1. Core "About Us" Information (Hero + Mission + CTA) ---
+
+class AboutPage(models.Model):
+    """
+    Stores the main content for the About Us page, including the Hero section,
+    Mission, and Call-to-Action (CTA).
+    This model is intended to have only one instance.
+    """
+    # Hero Section
+    hero_title = models.CharField(
+        max_length=150, 
+        verbose_name="Hero Title",
+        default="Korean Quality, On Baku Roads."
+    )
+    hero_subtitle = models.CharField(
+        max_length=255, 
+        verbose_name="Hero Subtitle",
+        default="Your reliable, transparent, and fast car supply platform."
+    )
+
+    # Mission Section
+    mission_title = models.CharField(
+        max_length=100,
+        verbose_name="Mission Title",
+        default="Connecting the Markets"
+    )
+    mission_text_primary = models.TextField(
+        verbose_name="Mission Text 1 (Primary)",
+        help_text="The first paragraph. Mention the name of the platform."
+    )
+    mission_text_secondary = models.TextField(
+        verbose_name="Mission Text 2 (Secondary)",
+        help_text="The second paragraph. Detail the selection and delivery process."
+    )
+    
+    # CTA (Call to Action) Section
+    cta_title = models.CharField(
+        max_length=100,
+        verbose_name="CTA Title",
+        default="Start Your Journey with Confidence."
+    )
+    cta_text = models.CharField(
+        max_length=255,
+        verbose_name="CTA Text",
+        default="Have questions about importing your dream car from Korea? Contact our team."
+    )
+
+    class Meta:
+        verbose_name = "About Page Core Data"
+        verbose_name_plural = "About Page Core Data"
+
+    def __str__(self):
+        return "About Page General Information"
+    
+    # Validation to ensure only one instance of this model can exist
+    def clean(self):
+        if AboutPage.objects.exists() and not self.pk:
+            raise ValidationError('Only one primary "AboutPage" instance can be created.')
+        super().clean()
+
+
+# --- 2. Our Values Section (The differentiating factors) ---
+
+class OurValue(models.Model):
+    """
+    Stores the key values that differentiate the platform (e.g., Transparency, Quality, Convenience).
+    """
+    title = models.CharField(max_length=100, verbose_name="Value Title")
+    description = models.TextField(max_length=300, verbose_name="Short Description")
+    # Field to store the Bootstrap icon class
+    icon_name = models.CharField(
+        max_length=50, 
+        verbose_name="Bootstrap Icon Name",
+        help_text="Example: bi-journal-check, bi-tools, bi-truck"
+    )
+    order = models.PositiveSmallIntegerField(
+        default=0, 
+        verbose_name="Display Order", 
+        help_text="The order in which the value appears on the page"
+    )
+
+    class Meta:
+        verbose_name = "Our Value"
+        verbose_name_plural = "What Makes Us Different (Values)"
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title
+
+
+# --- 3. Work Process Section (How We Work tabs) ---
+
+class WorkProcessStep(models.Model):
+    """
+    Stores each step in the "How We Work?" section (Car Selection, Logistics, Delivery).
+    """
+    step_number = models.PositiveSmallIntegerField(
+        unique=True, 
+        verbose_name="Step Number"
+    )
+    tab_label = models.CharField(
+        max_length=50, 
+        verbose_name="Tab Label (Small)",
+        help_text="E.g., Selection, Transport, Handover"
+    )
+    step_title = models.CharField(
+        max_length=100, 
+        verbose_name="Step Title (Large)"
+    )
+    step_description = models.TextField(
+        verbose_name="Step Description",
+        help_text="Detailed text appearing inside the tab."
+    )
+    # The icon is implicitly handled by the step_number (bi-1-circle, bi-2-circle, etc.)
+
+    class Meta:
+        verbose_name = "Work Process Step"
+        verbose_name_plural = "Work Process Steps"
+        ordering = ['step_number']
+
+    def __str__(self):
+        return f"{self.step_number}. {self.tab_label}"
+    

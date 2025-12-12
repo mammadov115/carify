@@ -1,6 +1,5 @@
-from django.views.generic import ListView
-from django.views.generic import DetailView
-from cars.models import Car, Brand, CarModel, Year
+from django.views.generic import ListView, DetailView, TemplateView
+from cars.models import Car, Brand, CarModel, Year, AboutPage, OurValue, WorkProcessStep
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db.models import Case, When
@@ -170,6 +169,33 @@ class FavoritesView(ListView):
             When(id=cid, then=pos) for pos, cid in enumerate(reversed(favorite_ids))
         ])
 
-        print(order)
-
         return Car.objects.filter(id__in=favorite_ids).order_by(order)
+
+
+class AboutUsView(TemplateView):
+    """
+    Class-Based View for the 'About Us' page.
+    It fetches all dynamic content (AboutPage, OurValue, WorkProcessStep)
+    and passes it to the template.
+    """
+    template_name = 'about.html'  # Define the template name
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # 1. Core Page Data (Should only be one object)
+        # Safely attempt to get the single AboutPage object
+        about_page_data = AboutPage.objects.first()
+
+        # 2. Values Section (Ordered by the 'order' field)
+        values = OurValue.objects.all().order_by('order')
+
+        # 3. Work Process Steps (Ordered by the 'step_number' field)
+        process_steps = WorkProcessStep.objects.all().order_by('step_number')
+
+        # Add data to the context
+        context['about_page_data'] = about_page_data
+        context['values'] = values
+        context['process_steps'] = process_steps
+        
+        return context

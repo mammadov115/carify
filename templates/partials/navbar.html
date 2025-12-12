@@ -1,41 +1,39 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-black shadow-sm sticky-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold text-danger" href="#">Carify Korea</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Home</a></li>
-                <li class="nav-item"><a class="nav-link {% if request.path == '/cars/' %}active{% endif %}" href="{% url 'cars' %}">Cars</a></li>
-                <li class="nav-item"><a class="nav-link {% if request.path == '/parts/' %}active{% endif %}" href="#">Parts</a></li>
-                <li class="nav-item"><a class="nav-link {% if request.path == '/about/' %}active{% endif %}" href="#">About</a></li>
-                <li class="nav-item"><a class="nav-link {% if request.path == '/contact/' %}active{% endif %}" href="#">Contact</a></li>
-            </ul>
-            <form class="d-flex me-3">
-                <input class="form-control me-2" type="search" placeholder="Search cars & parts..." aria-label="Search">
-                <button class="btn btn-outline-danger" type="submit">Search</button>
-            </form>
-            <!-- Shopping Cart Icon with Bootstrap Icon -->
-            <a class="btn btn-outline-danger position-relative me-3" href="{% url 'order-list' %}">
-                <i class="bi bi-cart-fill"></i> <!-- Cart Icon -->
-                {% with request.session.order_items|length as cart_count %}
-                    {% if cart_count > 0 %}
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {{ cart_count }}
-                            <span class="visually-hidden">items in cart</span>
-                        </span>
-                    {% endif %}
-                {% endwith %}
+<nav class="navbar navbar-expand-lg bg-primary navbar-dark shadow-sm sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center fw-semibold" href="{% url "home" %}">
+                <i class="bi bi-car-front-fill me-2 fs-4"></i>
+                Carleon
             </a>
-            {% if user.is_authenticated %}
-                <span class="navbar-text text-white me-2">Hello, {{ user.username }}</span>
-                <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
-            {% else %}
-                <a class="btn btn-danger me-2" href="{% url 'login' %}">Login</a>
-                <a class="btn btn-outline-danger" href="{% url 'register' %}">Register</a>
-            {% endif %}
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "about_us" %}"><i class="bi bi-info-circle-fill me-1"></i> Haqqımızda</a>
+                    </li>
+                    {% comment %} <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-gear-fill me-1"></i> Xidmətlər
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li> {% endcomment %}
+                </ul>
+                
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2 form-control-sm w-auto" type="search" placeholder="Axtarış..." aria-label="Search" />
+                    <button class="btn btn-outline-light btn-sm" type="submit">
+                        <i class="bi bi-search"></i> <span class="d-lg-none">Axtar</span>
+                    </button>
+                </form>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
