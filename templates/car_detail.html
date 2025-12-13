@@ -6,11 +6,36 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ car.brand }} {{ car.model }} {{ car.year }}</title>
+    <!--Meta tags-->
+    <meta name="description" content="{{ car.description }}">
+
+    <meta name="keywords" content="{{ car.title }}, {{ car.model }}, {{ car.brand }}">
+
+    <meta property="og:title" content="{{ car.title }}">
+    <meta property="og:description" content="{{ car.description }}">
+
+    <meta property="og:image" content="{{ car.main_image.url }}">
+
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.get_host }}{% url 'car_detail' car.slug %}">
+
+    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.get_host }}{% url 'car_detail' car.slug %}">
+
+    <meta property="og:type" content="website">
+
+    <meta property="og:site_name" content="Carleon">
+
+    <link rel="icon" href="{{ car.main_image.url }}" type="image/x-icon">
+
+
+
+
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" />
     <link rel="stylesheet" href="/static/car-detail.css" />
     <link rel="stylesheet" href="/static/favorite-icon.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" />
+    
     <!-- HTMX -->
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
 
@@ -25,7 +50,7 @@
       <div class="container">
         <div class="row">
           <div class="col-12">
-            <h1 class="display-5 fw-bold text-dark mb-1">{{ car.brand }} {{ car.model }} {{ car.year }}</h1>
+            <h1 class="display-5 fw-bold text-dark mb-1">{{ car.car_title }}</h1>
 
             <p class="lead text-muted">{{ car.get_category_display }} | {{ car.get_fuel_type_display|capfirst }} | {{ car.get_transmission_display|capfirst }}</p>
 
@@ -61,19 +86,47 @@
                     <span>{{ car.engine_volume|floatformat:1 }} L</span>
                   </li>
                   <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span class="fw-medium">Yürüş (Mileage):</span>
+                    <span class="fw-medium">Yürüş:</span>
                     <span>{{ car.mileage|default:'N/A' }} km</span>
                   </li>
                   <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span class="fw-medium">Vəziyyət (Condition):</span>
-                    <span>{{ car.get_condition_display }}</span>
+                    <span class="fw-medium">VIN :</span>
+                    <span>{{ car.vin }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-medium">İstehsal :</span>
+                    <span>{{ car.manufacture_date }}</span>
                   </li>
                 </ul>
+              </div>              
+            </div>
+
+            <div class="row mb-3">
+              <div class="col">
+                {% for feature in car.features.all %}
+                    <span class="badge text-bg-danger fs-6">{{ feature.name }}</span>
+                {% endfor %}
               </div>
             </div>
 
+
+            {% comment %} <div class="card shadow-sm border-0 mb-4">
+              <div class="card-header bg-success text-white fs-5 fw-semibold">Komplektasiya</div>
+              <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                  {% for feature in car.features.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span class="fw-medium">{{ feature.name }}</span>
+                      <span>{{ car.get_fuel_type_display }}</span>
+                    </li>
+                  {% endfor %}
+
+                </ul>
+              </div>
+            </div> {% endcomment %}
+
             <div class="card shadow-sm border-0">
-              <div class="card-header bg-primary text-white fs-5 fw-semibold">Təsvir</div>
+              <div class="card-header bg-primary text-white fs-5 fw-semibold">Ətraflı</div>
               <div class="card-body">
                 {% if car.description %}
                   <p>{{ car.description|linebreaksbr }}</p>
@@ -93,32 +146,49 @@
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="fw-medium">Dəyişdirilən Hissə Sayı:</span>
-                    <span class="badge rounded-pill {% if car.changed_parts_count > 0 %}
-                        
-                        bg-danger
-
+                    <span class="badge rounded-pill 
+                      {% if car.changed_parts.count == 0 %}
+                        bg-primary
+                      {% elif car.changed_parts.count == 1 %}
+                        bg-success
+                      {% elif car.changed_parts.count == 2 %}
+                        bg-warning
                       {% else %}
-                        
-                        bg-secondary
-
+                        bg-danger
                       {% endif %} fs-6">
-                      {{ car.changed_parts_count }}
+                      {{ car.changed_parts.count }}
                     </span>
                   </li>
+                  {% for part in car.changed_parts.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span >{{ part.name }}</span>
+                      </span>
+                    </li>
+                  {% endfor %}
+
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="fw-medium">Rənglənmiş Hissə Sayı:</span>
-                    <span class="badge rounded-pill {% if car.painted_parts_count > 0 %}
-                        
-                        bg-danger
-
+                    <span class="badge rounded-pill 
+                      {% if car.painted_parts.count == 0 %}
+                        bg-primary
+                      {% elif car.painted_parts.count == 1 %}
+                        bg-success
+                      {% elif car.painted_parts.count == 2 %}
+                        bg-warning
                       {% else %}
-                        
-                        bg-secondary
-
+                        bg-danger
                       {% endif %} fs-6">
-                      {{ car.painted_parts_count }}
+                      
+                      {{ car.painted_parts.count }}
                     </span>
                   </li>
+
+                  {% for part in car.painted_parts.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span >{{ part.name }}</span>
+                      </span>
+                    </li>
+                  {% endfor %}
                   {% comment %} <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="fw-medium">Seçilmiş Avtomobil:</span>
                     <span>
@@ -189,7 +259,7 @@
 
     <!-- Whatsapp -->
     <!-- Sticky WhatsApp CTA -->
-    <a href="https://wa.me/994506222692?text=Salam! Bu avtomobil mənim diqqətimi çəkdi. Əlavə məlumat verə bilərsinizmi? %0A {{ request.scheme }}://{{ request.get_host }}{% url 'car_detail' car.slug %}" target="_blank" class="btn btn-success rounded-circle position-fixed bottom-0 end-0 m-3 d-flex align-items-center justify-content-center shadow" style="width: 55px; height: 55px;"><i class="bi bi-whatsapp fs-2"></i></a>
+    <a href="https://wa.me/994559406700?text=Salam! Bu avtomobil mənim diqqətimi çəkdi. Əlavə məlumat verə bilərsinizmi? %0A {{ request.scheme }}://{{ request.get_host }}{% url 'car_detail' car.slug %}" target="_blank" class="btn btn-success rounded-circle position-fixed bottom-0 end-0 m-3 d-flex align-items-center justify-content-center shadow" style="width: 55px; height: 55px;"><i class="bi bi-whatsapp fs-2"></i></a>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>

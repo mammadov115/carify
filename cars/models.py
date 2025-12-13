@@ -24,8 +24,64 @@ class Year(models.Model):
 
     def __str__(self):
         return f"{self.year}"
-     
 
+# Car Features
+class CarFeature(models.Model):
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name="Feature Name",
+        help_text="Example: Automatic Climate Control, Cruise Control"
+    )
+
+    def __str__(self):
+        return self.name  
+
+#  Pained Parts
+class PaintedPart(models.Model):
+    car = models.ForeignKey(
+        "Car",
+        on_delete=models.CASCADE,
+        related_name="painted_parts"
+    )
+
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Part Name",
+        help_text="Example: Hood, Left Door"
+    )
+
+    class Meta:
+        verbose_name = "Painted Part"
+        verbose_name_plural = "Painted Parts"
+        ordering = ("name",)
+
+    def __str__(self):
+        return f"{self.car} – {self.name}"
+
+# Changed Parts
+class ChangedPart(models.Model):
+    car = models.ForeignKey(
+        "Car",
+        on_delete=models.CASCADE,
+        related_name="changed_parts"
+    )
+
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Part Name",
+        help_text="Example: Front Bumper, Rear Door"
+    )
+
+    class Meta:
+        verbose_name = "Changed Part"
+        verbose_name_plural = "Changed Parts"
+        ordering = ("name",)
+
+    def __str__(self):
+        return f"{self.car} – {self.name}"
+
+# Car model
 class Car(models.Model):
     """
     Represents a car listing with detailed information,
@@ -48,6 +104,41 @@ class Car(models.Model):
 
     ]
     
+    car_title = models.CharField(
+        max_length=120,
+        verbose_name="Car Title",
+        help_text="Example: Toyota Camry 2020 • Sedan • 2.5L",
+        null=True
+    )
+
+    vin = models.CharField(
+        max_length=17,
+        unique=True,
+        verbose_name="VIN",
+        help_text="17-character Vehicle Identification Number",
+        null=True
+    )
+
+    features = models.ManyToManyField(
+        CarFeature,
+        related_name="cars",
+        blank=True,
+        verbose_name="Features",
+    )
+
+    manufacture_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="Manufacture Date",
+        help_text="Leave empty if the manufacture date is unknown"
+    )
+
+    first_registration_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="First Registration Date",
+        help_text="Leave empty if the first registration date is unknown"
+    )
 
     category = models.CharField(
         max_length=20,
@@ -183,7 +274,7 @@ class Car(models.Model):
     def __str__(self):
         return f"{self.brand} {self.model} {self.year}"
 
-
+# Car images
 class CarImage(models.Model):
     """
     Represents additional images for a car.
