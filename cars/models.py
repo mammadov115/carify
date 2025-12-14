@@ -181,7 +181,7 @@ class Car(models.Model):
     customs_tax_estimate = models.DecimalField(
         max_digits=10, decimal_places=2,
         null=True,
-        help_text="Estimated customs tax for the car (in USD)."
+        help_text="Estimated customs tax for the car."
     )
     total_price = models.DecimalField(
         max_digits=12, 
@@ -237,10 +237,10 @@ class Car(models.Model):
             updated_fields.append("slug")
 
         # Total price calculation
-        new_total = (self.price or 0) + (self.customs_tax_estimate or 0)
-        if self.total_price != new_total:
-            self.total_price = new_total
-            updated_fields.append("total_price")
+        # new_total = (self.price or 0) + (self.customs_tax_estimate or 0)
+        # if self.total_price != new_total:
+        #     self.total_price = new_total
+        #     updated_fields.append("total_price")
         
         # Save only changed fields 
         if updated_fields:
@@ -253,31 +253,54 @@ class Car(models.Model):
         #     self.slug = slugify(f"{self.brand}-{self.model}-{self.year}-{self.pk}")
         # super().save(*args, **kwargs)
 
-        # resize image
-        output_size = (1000, 750)  # fixed container size (width, height)
-        img = Image.open(self.main_image.path)
-        img = img.convert("RGB")  # prevent errors for PNG w/ alpha
+        # # resize image
+        # output_size = (1000, 750)  # fixed container size (width, height)
+        # img = Image.open(self.main_image.path)
+        # img = img.convert("RGB")  # prevent errors for PNG w/ alpha
 
-        # resize while keeping aspect ratio (always covers container)
-        img.thumbnail((2000, 1500))  # allow upscaling
-        ratio = max(output_size[0] / img.width, output_size[1] / img.height)
-        new_size = (int(img.width * ratio), int(img.height * ratio))
-        img = img.resize(new_size, Image.LANCZOS)
+        # # resize while keeping aspect ratio (always covers container)
+        # img.thumbnail((2000, 1500))  # allow upscaling
+        # ratio = max(output_size[0] / img.width, output_size[1] / img.height)
+        # new_size = (int(img.width * ratio), int(img.height * ratio))
+        # img = img.resize(new_size, Image.LANCZOS)
 
-        # create background canvas
-        background = Image.new("RGB", output_size, (255, 255, 255))
+        # # create background canvas
+        # background = Image.new("RGB", output_size, (255, 255, 255))
 
-        # center position on canvas
-        x = (output_size[0] - new_size[0]) // 2
-        y = (output_size[1] - new_size[1]) // 2
-        background.paste(img, (x, y))
+        # # center position on canvas
+        # x = (output_size[0] - new_size[0]) // 2
+        # y = (output_size[1] - new_size[1]) // 2
+        # background.paste(img, (x, y))
 
-        # save result
-        background.save(self.main_image.path, quality=90)
+        # # save result
+        # background.save(self.main_image.path, quality=90)
+
+        # For body image map
+
 
         # Calculate total_price automatically
         # self.total_price = (self.price or 0) + (self.customs_tax_estimate or 0)
         # super().save(*args, **kwargs)
+
+        def resize_image(image_field, output_size=(1000, 750)):
+            if not image_field:
+                return
+            from PIL import Image
+            img = Image.open(image_field.path)
+            img = img.convert("RGB")
+            img.thumbnail((2000, 1500))
+            ratio = max(output_size[0] / img.width, output_size[1] / img.height)
+            new_size = (int(img.width * ratio), int(img.height * ratio))
+            img = img.resize(new_size, Image.LANCZOS)
+            background = Image.new("RGB", output_size, (255, 255, 255))
+            x = (output_size[0] - new_size[0]) // 2
+            y = (output_size[1] - new_size[1]) // 2
+            background.paste(img, (x, y))
+            background.save(image_field.path, quality=90)
+
+        
+        resize_image(self.main_image)
+        resize_image(self.body_map)
 
     def __str__(self):
         return f"{self.brand} {self.model} {self.year}"

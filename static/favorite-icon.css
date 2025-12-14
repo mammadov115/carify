@@ -1,9 +1,9 @@
+/* Favorites Card */
 .favorites-card {
-  background: linear-gradient(135deg, #1E3A8A, #3B82F6);
-  /* elegant blue gradient */
+  background: linear-gradient(135deg, #1E3A8A, #3B82F6); /* elegant blue gradient */
   color: #fff;
   border-radius: 1rem;
-  padding: 2rem;
+  /* padding: 2rem; */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -19,17 +19,12 @@
   margin-bottom: 1rem;
 }
 
+/* Favorite Icon */
 .favorite-icon {
-  font-size: 2rem;
-  color: #FF4757;
-  /* elegant heart red */
-  margin-top: 1rem;
-}
-
-.favorite-icon {
-  font-size: 1.4rem;
-  color: #FF4757;
+  font-size: 1.4rem; /* və ya 2rem, istədiyinə görə seç */
+  color: #FF4757; /* elegant heart red */
   cursor: pointer;
+  margin-top: 1rem;
   transition: transform 0.2s;
   z-index: 10;
 }
