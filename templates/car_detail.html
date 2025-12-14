@@ -91,7 +91,7 @@
                   </li>
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="fw-medium">İstehsal :</span>
-                    <span>{{ car.manufacture_date }}</span>
+                    <span>{{ car.manufacture_date|date:"d.m.Y" }}</span>
                   </li>
                 </ul>
               </div>              
@@ -120,17 +120,14 @@
                 </ul>
               </div>
             </div> {% endcomment %}
-
-            <div class="card shadow-sm border-0">
-              <div class="card-header bg-primary text-white fs-5 fw-semibold">Ətraflı</div>
-              <div class="card-body">
-                {% if car.description %}
-                  <p>{{ car.description|linebreaksbr }}</p>
-                {% else %}
-                  <p class="text-muted">Bu avtomobil üçün təsvir əlavə edilməyib.</p>
-                {% endif %}
+            {% if car.description %}
+              <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white fs-5 fw-semibold">Ətraflı</div>
+                <div class="card-body">
+                    <p>{{ car.description|linebreaksbr }}</p>
+                </div>
               </div>
-            </div>
+            {% endif %}
           </div>
 
           <div class="col-lg-4">

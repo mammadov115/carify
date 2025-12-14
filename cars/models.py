@@ -222,10 +222,34 @@ class Car(models.Model):
         """
         Automatically generates slug from brand, model, and year if not provided.
         """
-        if not self.slug:
-            super().save(*args, **kwargs)
-            self.slug = slugify(f"{self.brand}-{self.model}-{self.year}-{self.pk}")
+        # First save to get PK
         super().save(*args, **kwargs)
+
+        updated_fields = []
+
+        # Slug generate (only once)
+        year = self.manufacture_date.year if self.manufacture_date else None
+        new_slug = slugify(f"{self.brand}-{self.model}-{year}-{self.pk}")
+        if self.slug != new_slug:
+            self.slug = slugify(f"{self.brand}-{self.model}-{year}-{self.pk}")
+            updated_fields.append("slug")
+
+        # Total price calculation
+        new_total = (self.price or 0) + (self.customs_tax_estimate or 0)
+        if self.total_price != new_total:
+            self.total_price = new_total
+            updated_fields.append("total_price")
+        
+        # Save only changed fields 
+        if updated_fields:
+            super().save(update_fields=updated_fields)
+
+
+        # # Set slug only if blank
+        # if not self.slug and self.pk:
+        #     super().save(*args, **kwargs)
+        #     self.slug = slugify(f"{self.brand}-{self.model}-{self.year}-{self.pk}")
+        # super().save(*args, **kwargs)
 
         # resize image
         output_size = (1000, 750)  # fixed container size (width, height)
@@ -250,8 +274,8 @@ class Car(models.Model):
         background.save(self.main_image.path, quality=90)
 
         # Calculate total_price automatically
-        self.total_price = (self.price or 0) + (self.customs_tax_estimate or 0)
-        super().save(*args, **kwargs)
+        # self.total_price = (self.price or 0) + (self.customs_tax_estimate or 0)
+        # super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.brand} {self.model} {self.year}"
