@@ -120,17 +120,23 @@
                 </ul>
               </div>
             </div> {% endcomment %}
-            {% if car.description %}
-              <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white fs-5 fw-semibold">Ətraflı</div>
-                <div class="card-body">
-                    <p>{{ car.description|linebreaksbr }}</p>
-                </div>
-              </div>
-            {% endif %}
-          </div>
 
+            <!--Description-->
+            <!--
+              {% if car.description %}
+                <div class="card shadow-sm border-0">
+                  <div class="card-header bg-primary text-white fs-5 fw-semibold">Ətraflı</div>
+                  <div class="card-body">
+                      <p>{{ car.description|linebreaksbr }}</p>
+                  </div>
+                </div>
+              {% endif %}
+            -->
+          </div>
+          
           <div class="col-lg-4">
+            <!-- Body Status-->
+            <!--
             <div class="card shadow-sm border-0 mb-4">
               <div class="card-header bg-warning text-dark fs-5 fw-semibold">
                 <i class="bi bi-wrench me-2"></i> Gövdənin Vəziyyəti
@@ -195,7 +201,7 @@
                 </ul>
               </div>
             </div>
-
+            -->
             <div class="card bg-info bg-opacity-10 border-info border-2 border-start shadow-sm">
               <div class="card-body">
                 <h5 class="card-title text-primary fw-bold">Qiymət</h5>
@@ -208,31 +214,50 @@
       </div>
     </section>
 
-    <!-- Car Body Damage Map -->
-    {% if car.body_map %}
+    <!-- Car Body  Maps -->
       <section class="py-4">
         <div class="container">
           <div class="row justify-content-center">
-            <div class="col-12 col-lg-6">
-              <div class="card shadow-sm border-0 mb-3">
-                <div class="card-header fs-5 fw-semibold">
-                  Avtomobil zədələnmə hesabatı
-                </div>
-                <div class="card-body text-center">
-                  <img 
-                    src="{{ car.body_map.url }}" 
-                    alt="Car Body Damage Map"
-                    class="img-fluid rounded" 
-                    style="background-color: white;"
-                  />
+            {% if car.damage_map %}
+              <div class="col-12 col-lg-6">
+                <div class="card shadow-sm border-0 mb-3">
+                  <div class="card-header fs-5 fw-semibold">
+                    Zədələnmə hesabatı
+                  </div>
+                  <div class="card-body text-center">
+                    <img 
+                      src="{{ car.damage_map.url }}" 
+                      alt="Car Body Damage Map"
+                      class="img-fluid rounded" 
+                      style="background-color: white;"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            {% endif %}
+
+            {% if car.paint_map %}
+              <div class="col-12 col-lg-6">
+                <div class="card shadow-sm border-0 mb-3">
+                  <div class="card-header fs-5 fw-semibold">
+                    Rənglənmə hesabatı
+                  </div>
+                  <div class="card-body text-center">
+                    <img 
+                      src="{{ car.paint_map.url }}" 
+                      alt="Car Body Paint Map"
+                      class="img-fluid rounded" 
+                      style="background-color: white;"
+                    />
+                  </div>
+                </div>
+              </div>
+            {% endif %}
           </div>
         </div>
       </section>
 
-    {% endif %}
+    
 
 
     <!-- Youtube video -->

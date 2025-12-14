@@ -195,7 +195,8 @@ class Car(models.Model):
 
     # Media
     main_image = models.ImageField(upload_to='cars/', null=True)
-    body_map = models.ImageField(upload_to='body_maps/', null=True)
+    damage_map = models.ImageField(upload_to='body_maps/', null=True)
+    paint_map = models.ImageField(upload_to='body_maps/', null=True)
 
 
     # Description
@@ -300,7 +301,8 @@ class Car(models.Model):
 
         
         resize_image(self.main_image)
-        resize_image(self.body_map)
+        resize_image(self.damage_map)
+        resize_image(self.paint_map)
 
     def __str__(self):
         return f"{self.brand} {self.model} {self.year}"
