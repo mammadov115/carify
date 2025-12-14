@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carleon - Koreyadan Bakıya Avtomobil Satışı (Minimal)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ========================================= */
+        /* MINIMALISTIC STYLE & CUSTOM COLORS */
+        /* ========================================= */
+        :root {
+            /* Təmiz, neytral və sakit rənglər */
+            --minimal-primary: #1F2937;    /* Tünd Boz (Əsas Mətn) */
+            --minimal-accent: #10B981;     /* İncə Yaşıl (Emerald 500) */
+            --minimal-bg: #FFFFFF;         /* Təmiz Ağ Fon */
+            --minimal-surface: #F9FAFB;    /* Çox Yüngül Boz Səth */
+            --minimal-border: #E5E7EB;     /* Yüngül kənar xətt */
+        }
+        .bg-page { background-color: var(--minimal-bg); }
+        .bg-surface { background-color: var(--minimal-surface); }
+        .text-primary { color: var(--minimal-primary); }
+        .text-accent { color: var(--minimal-accent); }
+        .border-base { border: 1px solid var(--minimal-border); }
+
+        /* Font: Default təmiz sans-serif */
+        
+        /* ========================================= */
+        /* SOFT ANIMATIONS & TRANSITIONS */
+        /* ========================================= */
+        
+        /* Button Animations (Kölgəsiz, yalnız rəng dəyişimi) */
+        .button-animate {
+             transition: background-color 0.3s, transform 0.2s, opacity 0.3s;
+        }
+        .button-animate:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+
+        /* Card Hover Effect (Yalnız incə kölgə və kənar xəttin vurğulanması) */
+        .car-card {
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.3s;
+            border: 1px solid var(--minimal-border);
+        }
+        .car-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Çox yüngül kölgə */
+            border-color: var(--minimal-accent); 
+        }
+
+        /* Fade-In Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-item { opacity: 0; animation: fadeIn 0.6s ease-out forwards; }
+        .car-card:nth-child(1) { animation-delay: 0.1s; }
+        .car-card:nth-child(2) { animation-delay: 0.2s; }
+        .car-card:nth-child(3) { animation-delay: 0.3s; }
+        .car-card:nth-child(4) { animation-delay: 0.4s; }
+        .car-card:nth-child(5) { animation-delay: 0.5s; }
+        .car-card:nth-child(6) { animation-delay: 0.6s; }
+        .car-card:nth-child(7) { animation-delay: 0.7s; }
+        .car-card:nth-child(8) { animation-delay: 0.8s; }
+        .car-card:nth-child(9) { animation-delay: 0.9s; }
+
+        /* Modal Transitions */
+        .modal-bg { transition: opacity 0.3s ease-in-out; }
+        .nav-modal-content { transition: transform 0.3s ease-in-out; background-color: var(--minimal-bg); }
+        .filter-modal-content { transition: transform 0.3s ease-in-out; background-color: var(--minimal-bg); }
+
+
+        /* ========================================= */
+        /* DUAL RANGE SLIDER STYLE */
+        /* ========================================= */
+        .range-container { position: relative; height: 10px; margin-top: 20px; margin-bottom: 30px; }
+        .range-bar { position: absolute; width: 100%; height: 5px; background: #E5E7EB; border-radius: 5px; } 
+        .range-fill { position: absolute; height: 5px; background: var(--minimal-accent); border-radius: 5px; transition: left 0.1s ease-out, width 0.1s ease-out; }
+        .range-handle { 
+            position: absolute; width: 16px; height: 16px; background: var(--minimal-accent); border-radius: 50%; top: -5px; cursor: grab;
+            box-shadow: 0 0 0 3px var(--minimal-bg), 0 0 0 4px var(--minimal-accent); 
+            border: 1px solid var(--minimal-border);
+        }
+        .range-handle:hover { transform: scale(1.15); box-shadow: 0 0 0 3px var(--minimal-bg), 0 0 0 6px var(--minimal-accent); }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body class="bg-page antialiased">
+
+    <header class="sticky top-0 z-50 bg-page shadow-sm border-b border-base">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-primary fade-in-item">Carleon</a>
+            <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-md hover:bg-gray-100 button-animate"><i class="bi bi-list text-2xl text-primary"></i></button>
+            <nav class="hidden lg:flex space-x-6 font-medium text-primary fade-in-item" style="animation-delay: 0.1s;">
+                <a href="#" class="hover:text-accent transition duration-150">Avtomobillər</a>
+                <a href="#" class="hover:text-accent transition duration-150">Haqqımızda</a>
+                <a href="#" class="hover:text-accent transition duration-150">Əlaqə</a>
+                <a href="#" class="bg-primary text-white px-4 py-2 rounded-lg button-animate hover:bg-opacity-90">Giriş</a>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-nav-modal" class="fixed inset-0 z-[60] bg-black/50 modal-bg opacity-0 pointer-events-none">
+        <div class="bg-page w-3/4 max-w-xs h-full p-6 shadow-xl nav-modal-content -translate-x-full">
+            <div class="flex justify-between items-center mb-6 border-b border-base pb-3">
+                <span class="text-xl font-bold text-primary">Menyu</span>
+                <button id="close-mobile-nav" class="text-gray-500 hover:text-primary"><i class="bi bi-x-lg text-2xl"></i></button>
+            </div>
+            <nav class="flex flex-col space-y-4">
+                <a href="#" class="text-lg text-primary hover:text-accent fade-in-item">Avtomobillər</a>
+                <a href="#" class="text-lg text-primary hover:text-accent fade-in-item" style="animation-delay: 0.1s;">Haqqımızda</a>
+                <a href="#" class="text-lg text-primary hover:text-accent fade-in-item" style="animation-delay: 0.2s;">Əlaqə</a>
+                <a href="#" class="text-lg text-white bg-primary text-center px-4 py-2 rounded-lg mt-4 button-animate fade-in-item" style="animation-delay: 0.3s;">Giriş</a>
+            </nav>
+        </div>
+    </div>
+    
+    <main class="container mx-auto px-4 py-12">
+        <div class="text-center mb-12 fade-in-item" style="animation-delay: 0.2s;">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-primary mb-4">
+                Sadə və <span class="text-accent">Dəqiq</span> Avtomobil Axtarışı
+            </h1>
+
+            <div class="max-w-3xl mx-auto rounded-xl bg-surface p-2 flex items-center border border-base">
+                <input type="text" placeholder="Marka, Model və ya Açar Sözlə Axtar" 
+                       class="flex-grow p-3 text-lg border-none focus:ring-0 rounded-l-xl bg-surface text-primary placeholder-gray-500">
+                <button class="bg-accent text-white p-3 rounded-r-lg button-animate flex items-center justify-center">
+                    <i class="bi bi-search text-xl mr-2 hidden sm:inline"></i> 
+                    <span class="font-semibold">Axtar</span>
+                </button>
+            </div>
+            
+            <button id="open-filter-modal-btn" class="mt-4 lg:hidden bg-primary text-white px-6 py-3 rounded-lg shadow-sm button-animate flex items-center justify-center mx-auto">
+                <i class="bi bi-sliders mr-2"></i> Ətraflı Filtrlər
+            </button>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <aside class="hidden lg:block lg:w-1/4 fade-in-item" style="animation-delay: 0.3s;">
+                <div class="bg-surface p-6 rounded-xl border border-base sticky top-28">
+                    <h3 class="text-xl font-bold mb-6 border-b border-base pb-3 text-primary">
+                        <i class="bi bi-funnel-fill mr-2 text-accent"></i> Filtrlər
+                    </h3>
+                    
+                    <div class="mb-6">
+                        <label class="block font-semibold mb-3 text-primary">Qiymət Aralığı (AZN)</label>
+                        <div class="range-container" id="price-range-container">
+                            <div class="range-bar"></div>
+                            <div class="range-fill"></div>
+                            <div id="handle-min-price" class="range-handle"></div>
+                            <div id="handle-max-price" class="range-handle"></div>
+                        </div>
+                        <div class="flex justify-between text-sm mt-3 font-medium text-accent">
+                            <span id="min-price-display">5,000 AZN</span>
+                            <span id="max-price-display">80,000 AZN</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block font-semibold mb-2 text-primary">İstehsal İlləri</label>
+                        <div class="flex gap-2">
+                            <input type="number" placeholder="Min İl" class="w-1/2 p-2 border border-base rounded-lg focus:ring-accent focus:border-accent bg-page text-primary" min="1990" max="2025" value="2018">
+                            <input type="number" placeholder="Max İl" class="w-1/2 p-2 border border-base rounded-lg focus:ring-accent focus:border-accent bg-page text-primary" min="1990" max="2025" value="2024">
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block font-semibold mb-2 text-primary">Yanacaq Növü</label>
+                        <div class="space-y-2 text-sm text-primary">
+                            <label class="flex items-center"><input type="checkbox" class="rounded text-accent mr-2 border-base bg-page focus:ring-accent"> Benzin</label>
+                            <label class="flex items-center"><input type="checkbox" class="rounded text-accent mr-2 border-base bg-page focus:ring-accent"> Dizel</label>
+                            <label class="flex items-center"><input type="checkbox" class="rounded text-accent mr-2 border-base bg-page focus:ring-accent"> Hibrid</label>
+                        </div>
+                    </div>
+
+                    <button class="w-full bg-accent text-white py-2 rounded-lg mt-4 button-animate hover:bg-opacity-90">Filtrləri Tətbiq Et</button>
+                </div>
+            </aside>
+
+            <section class="lg:w-3/4">
+                
+                <div class="flex justify-between items-center mb-6 bg-surface p-4 rounded-xl border-base border fade-in-item" style="animation-delay: 0.3s;">
+                    <h2 class="text-xl font-bold text-primary">9 Avtomobil Tapıldı</h2>
+                    <div>
+                        <label for="sort-by" class="font-medium mr-2 text-primary hidden sm:inline">Sırala:</label>
+                        <select id="sort-by" class="border border-base rounded-lg p-2 focus:ring-accent focus:border-accent bg-page text-primary">
+                            <option value="yeni">Ən Yenilər</option>
+                            <option value="ucuz">Qiymət: Ucuzdan Bahaya</option>
+                            <option value="il">İl: Təzədən Köhnəyə</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <div class="rounded-xl overflow-hidden car-card fade-in-item bg-page">
+                        <img src="https://picsum.photos/id/400/400/250" alt="Hyundai Sonata 2021" class="w-full h-48 object-cover">
+                        <div class="p-4"><h3 class="text-xl font-semibold text-primary truncate mb-1">Hyundai Sonata N20 2021</h3>
+                            <p class="text-accent text-2xl font-bold mb-3">$18,500</p><div class="flex justify-between text-sm text-primary border-t border-base pt-2">
+                                <span class="flex items-center"><i class="bi bi-calendar mr-1"></i> 2021</span><span class="flex items-center"><i class="bi bi-speedometer2 mr-1"></i> 45K km</span>
+                            </div><button class="mt-4 w-full bg-primary text-white py-2 rounded-lg button-animate hover:bg-opacity-90">Ətraflı Bax</button>
+                        </div>
+                    </div>
+                    
+                    <div class="rounded-xl overflow-hidden car-card fade-in-item bg-page">
+                        <img src="https://picsum.photos/id/401/400/250" alt="Kia K5 2023" class="w-full h-48 object-cover">
+                        <div class="p-4"><h3 class="text-xl font-semibold text-primary truncate mb-1">Kia K5 (Optima) 2023</h3>
+                            <p class="text-accent text-2xl font-bold mb-3">$21,900</p><div class="flex justify-between text-sm text-primary border-t border-base pt-2">
+                                <span class="flex items-center"><i class="bi bi-calendar mr-1"></i> 2023</span><span class="flex items-center"><i class="bi bi-speedometer2 mr-1"></i> 12K km</span>
+                            </div><button class="mt-4 w-full bg-primary text-white py-2 rounded-lg button-animate hover:bg-opacity-90">Ətraflı Bax</button>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl overflow-hidden car-card fade-in-item bg-page">
+                        <img src="https://picsum.photos/id/402/400/250" alt="Genesis G80 2020" class="w-full h-48 object-cover">
+                        <div class="p-4"><h3 class="text-xl font-semibold text-primary truncate mb-1">Genesis G80 2020</h3>
+                            <p class="text-accent text-2xl font-bold mb-3">$35,000</p><div class="flex justify-between text-sm text-primary border-t border-base pt-2">
+                                <span class="flex items-center"><i class="bi bi-calendar mr-1"></i> 2020</span><span class="flex items-center"><i class="bi bi-speedometer2 mr-1"></i> 60K km</span>
+                            </div><button class="mt-4 w-full bg-primary text-white py-2 rounded-lg button-animate hover:bg-opacity-90">Ətraflı Bax</button>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl overflow-hidden car-card fade-in-item bg-page">
+                        <img src="https://picsum.photos/id/403/400/250" alt="Renault Samsung SM6 2018" class="w-full h-48 object-cover">
+                        <div class="p-4"><h3 class="text-xl font-semibold text-primary truncate mb-1">Renault Samsung SM6 2018</h3>
+                            <p class="text-accent text-2xl font-bold mb-3">$11,200</p><div class="flex justify-between text-sm text-primary border-t border-base pt-2">
+                                <span class="flex items-center"><i class="bi bi-calendar mr-1"></i> 2018</span><span class="flex items-center"><i class="bi bi-speedometer2 mr-1"></i> 95K km</span>
+                            </div><button class="mt-4 w-full bg-primary text-white py-2 rounded-lg button-animate hover:bg-opacity-90">Ətraflı Bax</button>
+                        </div>
+                    </div>
+                    
+                    <div class="rounded-xl overflow-hidden car-card fade-in-item bg-page">
+                        <img src="https://picsum.photos/id/404/400/250" alt="Kia Seltos 2022" class="w-full h-48 object-cover">
+                        <div class="p-4"><h3 class="text-xl font-semibold text-primary truncate mb-1">Kia Seltos 2022</h3>
+                            <p class="text-accent text-2xl font-bold mb-3">$19,500</p><div class="flex justify-between text-sm text-primary border-t border-base pt-2">
+                                <span class="flex items-center"><i class="bi bi-calendar mr-1"></i> 2022</span><span class="flex items-center"><i class="bi bi-speedometer2 mr-1"></i> 30K km</span>
+                            </div><button class="mt-4 w-full bg-primary text-white py-2 rounded-lg button-animate hover:bg-opacity-90">Ətraflı Bax</button>
+                        </div>
+                    </div>
+                    
+                    <div class="rounded-xl overflow-hidden car-card fade-in-item bg-page">
+                        <img src="https://picsum.photos/id/405/400/250" alt="SsangYong Tivoli 2019" class="w-full h-48 object-cover">
+                        <div class="p-4"><h3 class="text-xl font-semibold text-primary truncate mb-1">SsangYong Tivoli 2019</h3>
+                            <p class="text-accent text-2xl font-bold mb-3">$14,000</p><div class="flex justify-between text-sm text-primary border-t border-base pt-2">
+                                <span class="flex items-center"><i class="bi bi-calendar mr-1"></i> 2019</span><span class="flex items-center"><i class="bi bi-speedometer2 mr-1"></i> 70K km</span>
+                            </div><button class="mt-4 w-full bg-primary text-white py-2 rounded-lg button-animate hover:bg-opacity-90">Ətraflı Bax</button>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl overflow-hidden car-card fade-in-item bg-page">
+                        <img src="https://picsum.photos/id/406/400/250" alt="Hyundai Palisade 2021" class="w-full h-48 object-cover">
+                        <div class="p-4"><h3 class="text-xl font-semibold text-primary truncate mb-1">Hyundai Palisade 2021</h3>
+                            <p class="text-accent text-2xl font-bold mb-3">$28,900</p><div class="flex justify-between text-sm text-primary border-t border-base pt-2">
+                                <span class="flex items-center"><i class="bi bi-calendar mr-1"></i> 2021</span><span class="flex items-center"><i class="bi bi-speedometer2 mr-1"></i> 50K km</span>
+                            </div><button class="mt-4 w-full bg-primary text-white py-2 rounded-lg button-animate hover:bg-opacity-90">Ətraflı Bax</button>
+                        </div>
+                    </div>
+                    
+                    <div class="rounded-xl overflow-hidden car-card fade-in-item bg-page">
+                        <img src="https://picsum.photos/id/407/400/250" alt="Kia Carnival 2024" class="w-full h-48 object-cover">
+                        <div class="p-4"><h3 class="text-xl font-semibold text-primary truncate mb-1">Kia Carnival (Sedona) 2024</h3>
+                            <p class="text-accent text-2xl font-bold mb-3">$32,500</p><div class="flex justify-between text-sm text-primary border-t border-base pt-2">
+                                <span class="flex items-center"><i class="bi bi-calendar mr-1"></i> 2024</span><span class="flex items-center"><i class="bi bi-speedometer2 mr-1"></i> 5K km</span>
+                            </div><button class="mt-4 w-full bg-primary text-white py-2 rounded-lg button-animate hover:bg-opacity-90">Ətraflı Bax</button>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl overflow-hidden car-card fade-in-item bg-page">
+                        <img src="https://picsum.photos/id/408/400/250" alt="Chevrolet Spark 2017" class="w-full h-48 object-cover">
+                        <div class="p-4"><h3 class="text-xl font-semibold text-primary truncate mb-1">Chevrolet Spark 2017</h3>
+                            <p class="text-accent text-2xl font-bold mb-3">$7,800</p><div class="flex justify-between text-sm text-primary border-t border-base pt-2">
+                                <span class="flex items-center"><i class="bi bi-calendar mr-1"></i> 2017</span><span class="flex items-center"><i class="bi bi-speedometer2 mr-1"></i> 110K km</span>
+                            </div><button class="mt-4 w-full bg-primary text-white py-2 rounded-lg button-animate hover:bg-opacity-90">Ətraflı Bax</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center items-center mt-8 space-x-2 fade-in-item" style="animation-delay: 1.0s;">
+                    <a href="#" class="p-3 border border-base rounded-lg hover:bg-gray-100 text-primary button-animate"><i class="bi bi-chevron-left"></i></a>
+                    <a href="#" class="p-3 border rounded-lg bg-primary text-white font-semibold button-animate">1</a>
+                    <a href="#" class="p-3 border border-base rounded-lg hover:bg-gray-100 text-primary button-animate">2</a>
+                    <a href="#" class="p-3 border border-base rounded-lg hover:bg-gray-100 text-primary button-animate">3</a>
+                    <span class="p-3 text-gray-500">...</span>
+                    <a href="#" class="p-3 border border-base rounded-lg hover:bg-gray-100 text-primary button-animate">5</a>
+                    <a href="#" class="p-3 border border-base rounded-lg hover:bg-gray-100 text-primary button-animate"><i class="bi bi-chevron-right"></i></a>
+                </div>
+
+            </section>
+        </div>
+    </main>
+    
+    <div id="filter-modal" class="fixed inset-0 z-[70] bg-black/50 modal-bg opacity-0 pointer-events-none">
+        <div class="bg-page h-full w-full p-6 overflow-y-auto filter-modal-content translate-x-full ml-auto">
+            <div class="flex justify-between items-center mb-6 border-b border-base pb-4">
+                <h3 class="text-2xl font-bold text-primary">Ətraflı Filtrlər</h3>
+                <button id="close-filter-modal" class="text-gray-500 hover:text-primary"><i class="bi bi-x-lg text-2xl"></i></button>
+            </div>
+            
+            <div class="space-y-6">
+                <div class="mb-6">
+                    <label class="block font-semibold mb-3 text-primary">Qiymət Aralığı (AZN)</label>
+                    <div class="range-container" id="price-range-container-mobile">
+                        <div class="range-bar"></div>
+                        <div class="range-fill"></div>
+                        <div id="handle-min-price-mobile" class="range-handle"></div>
+                        <div id="handle-max-price-mobile" class="range-handle"></div>
+                    </div>
+                    <div class="flex justify-between text-sm mt-3 font-medium text-accent">
+                        <span id="min-price-display-mobile">5,000 AZN</span>
+                        <span id="max-price-display-mobile">80,000 AZN</span>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block font-semibold mb-2 text-primary">İstehsal İlləri</label>
+                    <div class="flex gap-2">
+                        <input type="number" placeholder="Min İl" class="w-1/2 p-2 border border-base rounded-lg focus:ring-accent focus:border-accent bg-page text-primary" min="1990" max="2025" value="2018">
+                        <input type="number" placeholder="Max İl" class="w-1/2 p-2 border border-base rounded-lg focus:ring-accent focus:border-accent bg-page text-primary" min="1990" max="2025" value="2024">
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block font-semibold mb-2 text-primary">Yanacaq Növü</label>
+                    <div class="space-y-2 text-sm text-primary">
+                        <label class="flex items-center"><input type="checkbox" class="rounded text-accent mr-2 border-base bg-page focus:ring-accent"> Benzin</label>
+                        <label class="flex items-center"><input type="checkbox" class="rounded text-accent mr-2 border-base bg-page focus:ring-accent"> Dizel</label>
+                        <label class="flex items-center"><input type="checkbox" class="rounded text-accent mr-2 border-base bg-page focus:ring-accent"> Hibrid</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sticky bottom-0 bg-page pt-4 border-t border-base mt-8">
+                <button class="w-full bg-accent text-white py-3 rounded-lg shadow-sm button-animate hover:bg-opacity-90">Filtrləri Tətbiq Et</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-surface mt-12 fade-in-item" style="animation-delay: 1.1s;">
+        <div class="container mx-auto px-4 py-8 text-gray-500 text-center text-sm border-t border-base">
+            <p>&copy; 2025 Carleon. Bütün hüquqlar qorunur. | Minimalist Dizayn</p>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            
+            // ------------------------------------------
+            // Dual Handle Range Slider Funksionallığı
+            // ------------------------------------------
+
+            function setupDualRangeSlider(containerId, minHandleId, maxHandleId, minDisplayId, maxDisplayId, fillSelector) {
+                const MIN_VAL = 1000;
+                const MAX_VAL = 100000;
+                const STEP = 500;
+                
+                const container = $('#' + containerId);
+                const minHandle = $('#' + minHandleId);
+                const maxHandle = $('#' + maxHandleId);
+                const rangeFill = container.find(fillSelector);
+                const minDisplay = $('#' + minDisplayId);
+                const maxDisplay = $('#' + maxDisplayId);
+                
+                let currentMin = 5000; 
+                let currentMax = 80000;
+
+                function valToPercent(value) {
+                    return ((value - MIN_VAL) / (MAX_VAL - MIN_VAL)) * 100;
+                }
+
+                function percentToVal(percent) {
+                    let val = (percent / 100) * (MAX_VAL - MIN_VAL) + MIN_VAL;
+                    return Math.round(val / STEP) * STEP;
+                }
+
+                function updateSlider(minVal, maxVal) {
+                    let minPercent = valToPercent(minVal);
+                    let maxPercent = valToPercent(maxVal);
+
+                    minHandle.css('left', minPercent + '%');
+                    maxHandle.css('left', maxPercent + '%');
+
+                    rangeFill.css({
+                        'left': minPercent + '%',
+                        'width': (maxPercent - minPercent) + '%'
+                    });
+
+                    const formatter = new Intl.NumberFormat('az-AZ', {
+                        style: 'currency',
+                        currency: 'AZN',
+                        minimumFractionDigits: 0
+                    });
+
+                    minDisplay.text(formatter.format(minVal).replace('AZN', ' AZN'));
+                    maxDisplay.text(formatter.format(maxVal).replace('AZN', ' AZN'));
+                }
+
+                updateSlider(currentMin, currentMax);
+
+                let isDragging = null; 
+
+                container.on('mousedown', '.range-handle', function(e) {
+                    e.preventDefault();
+                    isDragging = $(this).attr('id').includes('min') ? 'min' : 'max';
+                    $(this).css('cursor', 'grabbing');
+                    
+                    $(document).on('mousemove', onMouseMove);
+                    $(document).on('mouseup', onMouseUp);
+                });
+
+                function onMouseMove(e) {
+                    if (!isDragging) return;
+
+                    const containerWidth = container.width();
+                    const containerLeft = container.offset().left;
+                    
+                    let newXPercent = ((e.pageX - containerLeft) / containerWidth) * 100;
+                    newXPercent = Math.max(0, Math.min(100, newXPercent));
+
+                    let newValue = percentToVal(newXPercent);
+
+                    if (isDragging === 'min') {
+                        if (newValue < currentMax) {
+                            currentMin = newValue;
+                        } else {
+                            currentMin = currentMax;
+                        }
+                    } else if (isDragging === 'max') {
+                        if (newValue > currentMin) {
+                            currentMax = newValue;
+                        } else {
+                            currentMax = currentMin;
+                        }
+                    }
+                    
+                    updateSlider(currentMin, currentMax);
+                }
+
+                function onMouseUp() {
+                    if (isDragging) {
+                        isDragging = null;
+                        $('.range-handle').css('cursor', 'grab');
+                        $(document).off('mousemove', onMouseMove);
+                        $(document).off('mouseup', onMouseUp);
+                    }
+                }
+            }
+
+            // Desktop Sürgüsünün aktivləşdirilməsi
+            setupDualRangeSlider('price-range-container', 'handle-min-price', 'handle-max-price', 'min-price-display', 'max-price-display', '.range-fill');
+
+            // Mobile Sürgüsünün aktivləşdirilməsi
+            setupDualRangeSlider('price-range-container-mobile', 'handle-min-price-mobile', 'handle-max-price-mobile', 'min-price-display-mobile', 'max-price-display-mobile', '.range-fill');
+
+
+            // ------------------------------------------
+            // Modal Funksionallıqları (Animations ilə)
+            // ------------------------------------------
+
+            function openModal(modalId, contentSelector, directionClass) {
+                const modal = $(modalId);
+                const content = modal.find(contentSelector);
+                
+                // Modalı görünən et
+                modal.removeClass('pointer-events-none').addClass('opacity-100');
+
+                // Kontenti yerinə gətir
+                setTimeout(() => {
+                     content.removeClass(directionClass);
+                }, 10); 
+                
+                 // Mobil menuda animasiyanı yenidən başlat
+                 if (modalId === '#mobile-nav-modal') {
+                     modal.find('.fade-in-item').css({ 'animation': 'none' });
+                     setTimeout(function() {
+                         modal.find('.fade-in-item').css({ 'animation': '' });
+                     }, 50);
+                 }
+            }
+
+            function closeModal(modalId, contentSelector, directionClass) {
+                const modal = $(modalId);
+                const content = modal.find(contentSelector);
+                
+                // Kontenti kənara çıxart
+                content.addClass(directionClass);
+
+                // Kontent çıxandan sonra Modalı gizlət
+                setTimeout(() => {
+                     modal.addClass('pointer-events-none').removeClass('opacity-100');
+                }, 300); // 0.3s (CSS transition müddəti) gözləyirik.
+            }
+
+            // Mobile Nav Modal Actions
+            $('#mobile-menu-btn').on('click', function() {
+                openModal('#mobile-nav-modal', '.nav-modal-content', '-translate-x-full');
+            });
+            $('#close-mobile-nav').on('click', function() {
+                closeModal('#mobile-nav-modal', '.nav-modal-content', '-translate-x-full');
+            });
+            
+            // Filter Modal Actions (Mobile)
+            $('#open-filter-modal-btn').on('click', function() {
+                openModal('#filter-modal', '.filter-modal-content', 'translate-x-full');
+            });
+            $('#close-filter-modal').on('click', function() {
+                closeModal('#filter-modal', '.filter-modal-content', 'translate-x-full');
+            });
+            
+            // Backdrop bağlama (istifadəçi arxa fona basanda)
+            $('#mobile-nav-modal, #filter-modal').on('click', function(e) {
+                if ($(e.target).is('#mobile-nav-modal')) {
+                     closeModal('#mobile-nav-modal', '.nav-modal-content', '-translate-x-full');
+                }
+                if ($(e.target).is('#filter-modal')) {
+                     closeModal('#filter-modal', '.filter-modal-content', 'translate-x-full');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

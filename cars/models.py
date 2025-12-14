@@ -133,29 +133,11 @@ class Car(models.Model):
         help_text="Leave empty if the manufacture date is unknown"
     )
 
-    first_registration_date = models.DateField(
-        null=True,
-        blank=True,
-        verbose_name="First Registration Date",
-        help_text="Leave empty if the first registration date is unknown"
-    )
-
     category = models.CharField(
         max_length=20,
         choices=CATEGORY_CHOICES,
         default=KOREA_STOCK
     )
-
-    changed_parts_count = models.PositiveIntegerField(
-        default=0,
-        help_text="Number of parts replaced on the vehicle"
-    )
-
-    painted_parts_count = models.PositiveIntegerField(
-        default=0,
-        help_text="Number of body parts that have been repainted"
-    )
-
 
     featured = models.BooleanField(
         default=False,
