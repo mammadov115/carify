@@ -35,22 +35,22 @@
         <p class="card-text">{{ car.year }} / {{ car.mileage }} km</p>
         <div class="d-flex gap-2 parts-status">
           <!-- changed_parts_count -->
-          {% if car.changed_parts.count == 0 %}
+          {% if car.changed_parts_count == 0 %}
             <span class="badge rounded bg-primary-subtle text-primary">Dəyişən yox</span>
-          {% elif car.changed_parts.count == 1 %}
+          {% elif car.changed_parts_count == 1 %}
             <span class="badge rounded bg-success-subtle text-success">Dəyişən (1)</span>
-          {% elif car.changed_parts.count == 2 %}
+          {% elif car.changed_parts_count == 2 %}
             <span class="badge rounded bg-warning-subtle text-warning">Dəyişən (2)</span>
           {% else %}
             <span class="badge rounded bg-danger-subtle text-danger">Dəyişən (2+)</span>
           {% endif %}
 
           <!-- painted_parts_count -->
-          {% if car.painted_parts.count == 0 %}
+          {% if car.painted_parts_count == 0 %}
             <span class="badge rounded bg-primary-subtle text-primary">Boya yox</span>
-          {% elif car.painted_parts.count == 1 %}
+          {% elif car.painted_parts_count == 1 %}
             <span class="badge rounded bg-success-subtle text-success">Boya (1)</span>
-          {% elif car.painted_parts.count == 2 %}
+          {% elif car.painted_parts_count == 2 %}
             <span class="badge rounded bg-warning-subtle text-warning">Boya (2)</span>
           {% else %}
             <span class="badge rounded bg-danger-subtle text-danger">Boya (2+)</span>

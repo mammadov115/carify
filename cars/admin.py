@@ -50,13 +50,13 @@ class CarAdmin(admin.ModelAdmin):
     Admin configuration for Car model.
     Includes dealer info, technical specs, pricing, and features.
     """
-    list_display = ("brand", "model", "year", "price", "customs_tax_estimate","total_price")
+    list_display = ("brand", "model", "manufacture_date", "price", "customs_tax_estimate","total_price")
     list_filter = ("brand", "fuel_type", "transmission")
     search_fields = ("brand", "model")
-    inlines = [CarImageInline, PaintedPartInline, ChangedPartInline]
+    inlines = [CarImageInline]
     ordering = ("-created_at",)
     readonly_fields = ("created_at", "updated_at")
-    exclude = ("slug",)
+    exclude = ("slug", "description")
     list_editable = ("customs_tax_estimate", )
     form = CarAdminForm
 
