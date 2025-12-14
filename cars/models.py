@@ -198,8 +198,8 @@ class Car(models.Model):
     damage_map = models.ImageField(upload_to='body_maps/', null=True)
     paint_map = models.ImageField(upload_to='body_maps/', null=True)
 
-    changed_parts_count = models.PositiveIntegerField()
-    painted_parts_count = models.PositiveIntegerField()
+    changed_parts_count = models.PositiveIntegerField(null=True, default=0)
+    painted_parts_count = models.PositiveIntegerField(null=True, default=0)
 
     # Description
     description = models.TextField(blank=True, null=True)
