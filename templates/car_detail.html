@@ -16,9 +16,9 @@
 
     <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ car.main_image.url }}">
 
-    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.get_host }}{% url 'car_detail' car.slug %}">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{% url 'car_detail' car.slug %}">
 
-    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.get_host }}{% url 'car_detail' car.slug %}">
+    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'car_detail' car.slug %}">
 
     <meta property="og:type" content="website">
 
