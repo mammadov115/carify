@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function updateTotal() {
         const price = parseFloat(priceInput.value) || 0;
         const tax = parseFloat(taxInput.value) || 0;
-        totalInput.value = (price + tax).toFixed(2);
+        totalInput.value = ((price*1.7)  + tax).toFixed(2);
     }
 
     priceInput.addEventListener("input", updateTotal);

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ car.brand }} {{ car.model }} {{ car.year }}</title>
     <!--Meta tags-->
-    <meta name="description" content="{{ car.description }}">
+    <meta name="description" content="{{ car.title }}">
 
     <meta name="keywords" content="{{ car.title }}, {{ car.model }}, {{ car.brand }}">
 
@@ -22,9 +22,9 @@
 
     <meta property="og:type" content="website">
 
-    <meta property="og:site_name" content="Carleon">
+    <meta property="og:site_name" content="SOON Global">
 
-    <link rel="icon" href="{{ car.main_image.url }}" type="image/x-icon">
+    <link rel="icon" href="{{ request.scheme }}://{{ request.get_host }}{{ car.main_image.url }}" type="image/x-icon">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" />
@@ -206,7 +206,7 @@
               <div class="card-body">
                 <h5 class="card-title text-primary fw-bold">Qiymət</h5>
                 <p class="card-text fs-3 fw-bolder text-dark mb-0">${{ car.price|thousands_dot }}</p>
-                <small class="text-success fw-medium">Gömrük daxil: {{ car.total_price|thousands_dot }}<i class="bi bi-currency-dollar me-1"></i></small>
+                <small class="text-success fw-medium">Gömrük daxil: {{ car.total_price|thousands_dot }} ₼</i></small>
               </div>
             </div>
           </div>
