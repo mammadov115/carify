@@ -61,7 +61,7 @@
     {% include 'partials/car_details/carousel.html' %}
 
     <!-- Car info -->
-    <section class="py-5">
+    <section class="pt-5 ">
       <div class="container">
         <div class="row g-4">
           <div class="col-lg-8">
@@ -207,6 +207,28 @@
         </div>
       </div>
     </section>
+
+    <!-- Car Body Damage Map -->
+    {% if car.body_map %}
+    <section class="py-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card-header  fs-5 fw-semibold">Avtomobil zədələnmə hesabatı:
+            </div>
+            <div class="damage-map-wrapper text-center">
+              <img 
+                src="{{ car.body_map.url }}" 
+                alt="Car Body Damage Map"
+                class="damage-map-img"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
 
     <!-- Youtube video -->
     <div class="container py-4">

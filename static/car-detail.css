@@ -198,3 +198,22 @@
     scrollbar-color: rgba(215, 15, 15, 0.4) rgba(0,0,0,0.1);
 }
 
+
+.damage-map-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.damage-map-img {
+    width: 100%;
+    height: auto;
+    display: block;
+
+    /* The trick */
+    background-color: #fff;
+    mix-blend-mode: multiply;
+
+    /* Optional: very soft realism */
+    filter: contrast(1.05);
+}
+

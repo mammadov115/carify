@@ -195,6 +195,8 @@ class Car(models.Model):
 
     # Media
     main_image = models.ImageField(upload_to='cars/', null=True)
+    body_map = models.ImageField(upload_to='body_maps/', null=True)
+
 
     # Description
     description = models.TextField(blank=True, null=True)
